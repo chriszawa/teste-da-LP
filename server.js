@@ -301,7 +301,7 @@ function serveStatic(req, res, pathname) {
   const contentType = MIME_TYPES[ext] || "application/octet-stream";
 
   const cacheControl =
-    ext === ".html" ? "no-store" : "public, max-age=86400, immutable";
+    ext === ".html" ? "no-store" : "public, max-age=0, must-revalidate";
 
   res.writeHead(200, {
     "Content-Type": contentType,

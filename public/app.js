@@ -206,7 +206,7 @@ function initLeadForm() {
 }
 
 function initMouseLight() {
-  if (window.matchMedia("(pointer: coarse)").matches) return;
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
 
   const light = document.createElement("div");
   light.id = "mouse-light";
@@ -216,64 +216,72 @@ function initMouseLight() {
   let targetY = window.innerHeight / 2;
   let currentX = targetX;
   let currentY = targetY;
-  let visible = false;
   let t = 0;
 
-  document.addEventListener("mousemove", (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    if (!visible) {
-      currentX = targetX;
-      currentY = targetY;
-      light.style.opacity = "1";
-      visible = true;
-    }
-  });
+  if (isTouch) {
+    // Mobile: luz ambiente que flutua autonomamente
+    light.style.opacity = "0.7";
+    targetX = window.innerWidth / 2;
+    targetY = window.innerHeight / 2;
 
-  document.addEventListener("mouseleave", () => { light.style.opacity = "0"; });
-  document.addEventListener("mouseenter", () => { light.style.opacity = "1"; });
+    document.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      targetX = touch.clientX;
+      targetY = touch.clientY;
+    }, { passive: true });
+
+  } else {
+    // Desktop: segue o mouse
+    document.addEventListener("mousemove", (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      light.style.opacity = "1";
+    });
+    document.addEventListener("mouseleave", () => { light.style.opacity = "0"; });
+    document.addEventListener("mouseenter", () => { light.style.opacity = "1"; });
+
+    // Luz reativa nos cards
+    const cardSelectors = [
+      ".testimonial-card",
+      ".service-card",
+      ".stat-box",
+      ".form-card",
+      ".pillar-row",
+      ".step-item",
+    ].join(", ");
+
+    document.querySelectorAll(cardSelectors).forEach((card) => {
+      card.classList.add("reactive-card");
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--card-x", (e.clientX - rect.left) + "px");
+        card.style.setProperty("--card-y", (e.clientY - rect.top) + "px");
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.setProperty("--card-x", "-9999px");
+        card.style.setProperty("--card-y", "-9999px");
+      });
+    });
+  }
 
   (function animate() {
     t += 0.004;
 
-    // Segue o mouse suavemente
-    currentX += (targetX - currentX) * 0.06;
-    currentY += (targetY - currentY) * 0.06;
+    currentX += (targetX - currentX) * (isTouch ? 0.04 : 0.06);
+    currentY += (targetY - currentY) * (isTouch ? 0.04 : 0.06);
 
-    // Deriva orgânica: múltiplas frequências criam movimento não repetitivo
+    // Deriva orgânica com múltiplas frequências
     const driftX = Math.sin(t * 1.3) * 55 + Math.cos(t * 0.6) * 30 + Math.sin(t * 2.1) * 12;
     const driftY = Math.cos(t * 1.0) * 45 + Math.sin(t * 0.8) * 35 + Math.cos(t * 1.8) * 18;
 
-    light.style.setProperty("--x", (currentX + driftX) + "px");
-    light.style.setProperty("--y", (currentY + driftY) + "px");
+    // Em mobile, a deriva é maior para compensar a falta de mouse
+    const driftScale = isTouch ? 2.5 : 1;
+
+    light.style.setProperty("--x", (currentX + driftX * driftScale) + "px");
+    light.style.setProperty("--y", (currentY + driftY * driftScale) + "px");
 
     requestAnimationFrame(animate);
   })();
-
-  // Luz reativa nos cards
-  const cardSelectors = [
-    ".testimonial-card",
-    ".service-card",
-    ".stat-box",
-    ".form-card",
-    ".pillar-row",
-    ".step-item",
-  ].join(", ");
-
-  document.querySelectorAll(cardSelectors).forEach((card) => {
-    card.classList.add("reactive-card");
-
-    card.addEventListener("mousemove", (e) => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty("--card-x", (e.clientX - rect.left) + "px");
-      card.style.setProperty("--card-y", (e.clientY - rect.top) + "px");
-    });
-
-    card.addEventListener("mouseleave", () => {
-      card.style.setProperty("--card-x", "-9999px");
-      card.style.setProperty("--card-y", "-9999px");
-    });
-  });
 }
 
 initNavbarScroll();
