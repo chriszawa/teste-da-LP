@@ -267,6 +267,18 @@ async function handleWebhook(req, res) {
 
   // Notifica e salva apenas a primeira resposta
   if (repliedPhones.has(phone)) return;
+
+  // Verifica no Sheets se já existe resposta (persiste entre reinicios)
+  if (isSheetsEnabled()) {
+    try {
+      const existing = await readRepliesFromSheets();
+      if (existing && existing.some(r => (r.phone || "").replace(/\D/g, "") === phone)) {
+        repliedPhones.add(phone);
+        return;
+      }
+    } catch { /* ignora e continua */ }
+  }
+
   repliedPhones.add(phone);
 
   const reply = { createdAt: new Date().toISOString(), phone, senderName, message };
