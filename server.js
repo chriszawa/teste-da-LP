@@ -2,8 +2,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const { appendLeadToSheets, readLeadsFromSheets, isSheetsEnabled } = require("./googleSheets");
-const { sendWhatsApp, isWhatsAppEnabled } = require("./whatsapp");
+const { appendLeadToSheets, readLeadsFromSheets, appendReplyToSheets, readRepliesFromSheets, isSheetsEnabled } = require("./googleSheets");
+const { sendWhatsApp, sendGroupMessage, isWhatsAppEnabled } = require("./whatsapp");
 
 // Simple in-memory rate limiter: max 5 lead submissions per IP per 60 s
 const rateLimitStore = new Map();
@@ -248,6 +248,51 @@ async function handleCreateLead(req, res) {
   return sendJson(res, 200, { ok: true, id: record.id });
 }
 
+async async function handleWebhook(req, res) {
+  res.writeHead(200);
+  res.end("ok");
+
+  let payload;
+  try { payload = await readBodyJson(req); } catch { return; }
+
+  if (payload.fromMe || payload.isGroup) return;
+
+  const message = (payload.text?.message || payload.caption || "").trim();
+  if (!message) return;
+
+  const phone = payload.phone || "";
+  const senderName = payload.senderName || payload.chatName || "Lead";
+
+  const reply = { createdAt: new Date().toISOString(), phone, senderName, message };
+
+  if (isSheetsEnabled()) appendReplyToSheets(reply).catch(() => {});
+
+  const groupId = process.env.ZAPI_NOTIFY_GROUP;
+  if (groupId && isWhatsAppEnabled()) {
+    const notification =
+      `🔔 *Lead respondeu!*\n\n` +
+      `*Nome:* ${senderName}\n` +
+      `*Mensagem:* ${message}`;
+    sendGroupMessage(groupId, notification).catch(() => {});
+  }
+}
+
+async function handleAdminReplies(req, res) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
+
+  const auth = req.headers.authorization || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (token !== adminPassword) return sendJson(res, 401, { ok: false, error: "unauthorized" });
+
+  try {
+    const replies = isSheetsEnabled() ? await readRepliesFromSheets() : [];
+    return sendJson(res, 200, { ok: true, replies: replies || [] });
+  } catch {
+    return sendJson(res, 200, { ok: true, replies: [] });
+  }
+}
+
 async function handleAdminLeads(req, res) {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) {
@@ -341,6 +386,14 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname === "/api/admin/leads" && req.method === "GET") {
     return handleAdminLeads(req, res);
+  }
+
+  if (pathname === "/api/admin/replies" && req.method === "GET") {
+    return handleAdminReplies(req, res);
+  }
+
+  if (pathname === "/api/webhook/zapi" && req.method === "POST") {
+    return handleWebhook(req, res);
   }
 
   if (pathname === "/admin") {

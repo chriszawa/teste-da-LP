@@ -146,9 +146,74 @@ async function readLeadsFromSheets() {
     .reverse();
 }
 
+async function appendReplyToSheets(reply) {
+  if (!isSheetsEnabled()) return { ok: false, skipped: true };
+
+  let google;
+  try {
+    ({ google } = require("googleapis"));
+  } catch {
+    return { ok: false, error: "missing_dependency_googleapis" };
+  }
+
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID.trim();
+  const serviceAccount = readServiceAccountFromEnv();
+  if (!serviceAccount) return { ok: false, error: "missing_service_account" };
+
+  const auth = new google.auth.GoogleAuth({
+    credentials: serviceAccount,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  const sheets = google.sheets({ version: "v4", auth });
+  await sheets.spreadsheets.values.append({
+    spreadsheetId,
+    range: "RESPOSTAS!A:D",
+    valueInputOption: "USER_ENTERED",
+    insertDataOption: "INSERT_ROWS",
+    requestBody: { values: [[reply.createdAt || "", reply.phone || "", reply.senderName || "", reply.message || ""]] },
+  });
+
+  return { ok: true };
+}
+
+async function readRepliesFromSheets() {
+  if (!isSheetsEnabled()) return null;
+
+  let google;
+  try {
+    ({ google } = require("googleapis"));
+  } catch {
+    return null;
+  }
+
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID.trim();
+  const serviceAccount = readServiceAccountFromEnv();
+  if (!serviceAccount) return null;
+
+  const auth = new google.auth.GoogleAuth({
+    credentials: serviceAccount,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  const sheets = google.sheets({ version: "v4", auth });
+  const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: "RESPOSTAS!A:D" });
+  const rows = res.data.values || [];
+  if (rows.length < 2) return [];
+
+  return rows.slice(1).filter(r => r.some(Boolean)).map(r => ({
+    createdAt: r[0] || null,
+    phone: r[1] || null,
+    senderName: r[2] || null,
+    message: r[3] || null,
+  }));
+}
+
 module.exports = {
   appendLeadToSheets,
   readLeadsFromSheets,
+  appendReplyToSheets,
+  readRepliesFromSheets,
   isSheetsEnabled,
 };
 

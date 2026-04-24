@@ -255,6 +255,27 @@
       border: 1px solid rgba(123,47,190,0.25);
       color: var(--roxo-claro);
     }
+    .badge-reply {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+      cursor: default;
+    }
+    .reply-preview {
+      font-size: 0.78rem;
+      color: #4ade80;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .wa-link {
       color: #4ade80;
       text-decoration: none;
@@ -364,6 +385,7 @@
               <th>Restaurante</th>
               <th>Segmento</th>
               <th>Faturamento</th>
+              <th>Resposta</th>
             </tr>
           </thead>
           <tbody id="table-body">
@@ -377,6 +399,7 @@
 
 <script>
 let allLeads = [];
+let allReplies = [];
 let token = "";
 
 function login() {
@@ -426,18 +449,30 @@ function showDashboard() {
   renderTable();
 }
 
+function normalizePhone(phone) {
+  const d = String(phone || "").replace(/\D/g, "");
+  return d.startsWith("55") && d.length > 11 ? d.slice(2) : d;
+}
+
+function getReplyForLead(lead) {
+  const leadPhone = normalizePhone(lead.telefone);
+  return allReplies.find(r => normalizePhone(r.phone) === leadPhone) || null;
+}
+
 function loadLeads() {
   if (!token) return;
   const btn = document.querySelector(".btn-refresh i");
   btn.classList.add("fa-spin");
-  fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + token } })
-    .then(r => r.json())
-    .then(data => {
-      if (data.ok) {
-        allLeads = data.leads;
-        updateStats();
-        renderTable();
-      }
+
+  Promise.all([
+    fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+    fetch("/api/admin/replies", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+  ])
+    .then(([leadsData, repliesData]) => {
+      if (leadsData.ok) allLeads = leadsData.leads;
+      if (repliesData.ok) allReplies = repliesData.replies;
+      updateStats();
+      renderTable();
     })
     .catch(() => {})
     .finally(() => btn.classList.remove("fa-spin"));
@@ -480,7 +515,7 @@ function renderTable() {
 
   const tbody = document.getElementById("table-body");
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state"><i class="fas fa-inbox"></i>Nenhum lead encontrado</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i>Nenhum lead encontrado</td></tr>`;
     return;
   }
 
@@ -489,6 +524,10 @@ function renderTable() {
     const waLink = tel
       ? `<a class="wa-link" href="https://wa.me/55${tel}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i>${esc(l.telefone)}</a>`
       : esc(l.telefone) || "—";
+    const reply = getReplyForLead(l);
+    const replyCell = reply
+      ? `<span class="badge-reply" title="${esc(reply.message)}"><i class="fas fa-reply"></i> Respondeu</span><div class="reply-preview">${esc(reply.message)}</div>`
+      : `<span style="color:var(--cinza-medio);font-size:0.75rem;">—</span>`;
     return `<tr>
       <td class="col-data">${fmtDate(l.createdAt)}</td>
       <td class="col-nome">${esc(l.nome)}</td>
@@ -497,6 +536,7 @@ function renderTable() {
       <td>${esc(l.empresa)}</td>
       <td><span class="badge">${esc(l.segmento)}</span></td>
       <td>${esc(l.faturamento)}</td>
+      <td>${replyCell}</td>
     </tr>`;
   }).join("");
 }
@@ -536,9 +576,18 @@ document.getElementById("login-btn").addEventListener("click", login);
 
 const saved = sessionStorage.getItem("admin_token");
 if (saved) {
-  fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + saved } })
-    .then(r => r.json())
-    .then(data => { if (data.ok) { token = saved; allLeads = data.leads; showDashboard(); } })
+  Promise.all([
+    fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
+    fetch("/api/admin/replies", { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
+  ])
+    .then(([leadsData, repliesData]) => {
+      if (leadsData.ok) {
+        token = saved;
+        allLeads = leadsData.leads;
+        if (repliesData.ok) allReplies = repliesData.replies;
+        showDashboard();
+      }
+    })
     .catch(() => {});
 }
 

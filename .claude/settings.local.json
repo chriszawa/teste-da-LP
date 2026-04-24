@@ -4,7 +4,18 @@
       "Bash(node -e ' *)",
       "Bash(node --check server.js)",
       "Bash(node --check googleSheets.js)",
-      "Bash(pkill -f \"node server.js\")"
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(npx kill-port *)",
+      "Bash(node server.js)",
+      "Bash(curl -s \"https://gustavocampelo.com.br/comunidade-webhub\")",
+      "Bash(curl -L -A \"Mozilla/5.0\" \"https://gustavocampelo.com.br/comunidade-webhub\")",
+      "Bash(curl -s -L -A \"Mozilla/5.0\" \"https://gustavocampelo.com.br/comunidade-webhub\")",
+      "Bash(curl -s \"https://gustavocampelo.com.br/wp-content/uploads/elementor/css/post-6445.css\")",
+      "Bash(start \"\" \"http://localhost:3000\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git commit *)"
     ]
   }
 }
