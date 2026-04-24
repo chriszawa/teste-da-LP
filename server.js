@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { appendLeadToSheets, isSheetsEnabled } = require("./googleSheets");
+const { sendWhatsApp, isWhatsAppEnabled } = require("./whatsapp");
 
 // Simple in-memory rate limiter: max 5 lead submissions per IP per 60 s
 const rateLimitStore = new Map();
@@ -238,6 +239,10 @@ async function handleCreateLead(req, res) {
   // Se falhar, o lead continua salvo em `data/leads.ndjson`.
   if (isSheetsEnabled()) {
     appendLeadToSheets(record).catch(() => {});
+  }
+
+  if (isWhatsAppEnabled()) {
+    sendWhatsApp(record).catch(() => {});
   }
 
   return sendJson(res, 200, { ok: true, id: record.id });
