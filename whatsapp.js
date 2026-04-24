@@ -16,10 +16,9 @@ function formatPhone(raw) {
 
 function buildMessage(lead) {
   const nome = lead.nome.split(" ")[0];
-  const empresa = lead.empresa || "seu restaurante";
   return (
     `Oi, ${nome}! Aqui é o time da Nexus. 👋\n\n` +
-    `Vi que o ${empresa} pediu o diagnóstico gratuito, ótima decisão!\n\n` +
+    `Vi que você pediu o diagnóstico gratuito, ótima decisão!\n\n` +
     `Me conta uma coisa: hoje, seu maior desafio é atrair clientes novos, fazer os que já têm voltarem mais, ou aumentar o valor médio de cada pedido?\n\n` +
     `Pergunto porque cada restaurante tem um ponto de alavancagem diferente e quero entender o seu antes de falar com você. 😊`
   );
