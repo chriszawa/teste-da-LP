@@ -248,6 +248,8 @@ async function handleCreateLead(req, res) {
   return sendJson(res, 200, { ok: true, id: record.id });
 }
 
+const repliedPhones = new Set();
+
 async function handleWebhook(req, res) {
   res.writeHead(200);
   res.end("ok");
@@ -260,8 +262,12 @@ async function handleWebhook(req, res) {
   const message = (payload.text?.message || payload.caption || "").trim();
   if (!message) return;
 
-  const phone = payload.phone || "";
+  const phone = (payload.phone || "").replace(/\D/g, "");
   const senderName = payload.senderName || payload.chatName || "Lead";
+
+  // Notifica e salva apenas a primeira resposta
+  if (repliedPhones.has(phone)) return;
+  repliedPhones.add(phone);
 
   const reply = { createdAt: new Date().toISOString(), phone, senderName, message };
 
