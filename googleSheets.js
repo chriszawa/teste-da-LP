@@ -209,11 +209,101 @@ async function readRepliesFromSheets() {
   }));
 }
 
+async function readAllStatuses() {
+  if (!isSheetsEnabled()) return [];
+
+  let google;
+  try {
+    ({ google } = require("googleapis"));
+  } catch {
+    return [];
+  }
+
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID.trim();
+  const serviceAccount = readServiceAccountFromEnv();
+  if (!serviceAccount) return [];
+
+  const auth = new google.auth.GoogleAuth({
+    credentials: serviceAccount,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  const sheets = google.sheets({ version: "v4", auth });
+  try {
+    const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: "STATUS!A:C" });
+    const rows = res.data.values || [];
+    if (rows.length < 2) return [];
+    return rows.slice(1).filter(r => r[0]).map(r => ({
+      phone: r[0] || "",
+      status: r[1] || "Novo",
+      updatedAt: r[2] || "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
+async function updateLeadStatus(phone, status) {
+  if (!isSheetsEnabled()) return { ok: false, skipped: true };
+
+  let google;
+  try {
+    ({ google } = require("googleapis"));
+  } catch {
+    return { ok: false, error: "missing_dependency_googleapis" };
+  }
+
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID.trim();
+  const serviceAccount = readServiceAccountFromEnv();
+  if (!serviceAccount) return { ok: false, error: "missing_service_account" };
+
+  const auth = new google.auth.GoogleAuth({
+    credentials: serviceAccount,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  const sheets = google.sheets({ version: "v4", auth });
+  const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: "STATUS!A:C" });
+  const rows = res.data.values || [];
+  const phoneDigits = phone.replace(/\D/g, "");
+
+  let rowIndex = -1;
+  for (let i = 1; i < rows.length; i++) {
+    if ((rows[i][0] || "").replace(/\D/g, "") === phoneDigits) {
+      rowIndex = i + 1;
+      break;
+    }
+  }
+
+  const updatedAt = new Date().toISOString();
+
+  if (rowIndex > 0) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `STATUS!A${rowIndex}:C${rowIndex}`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [[phone, status, updatedAt]] },
+    });
+  } else {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: "STATUS!A:C",
+      valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: { values: [[phone, status, updatedAt]] },
+    });
+  }
+
+  return { ok: true };
+}
+
 module.exports = {
   appendLeadToSheets,
   readLeadsFromSheets,
   appendReplyToSheets,
   readRepliesFromSheets,
   isSheetsEnabled,
+  readAllStatuses,
+  updateLeadStatus,
 };
 

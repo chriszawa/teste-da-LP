@@ -71,4 +71,29 @@ async function sendGroupMessage(groupId, message) {
   return { ok: true, data };
 }
 
-module.exports = { sendWhatsApp, sendGroupMessage, isWhatsAppEnabled };
+async function sendWhatsAppRaw(phone, message) {
+  if (!isWhatsAppEnabled()) return { ok: false, skipped: true };
+
+  const formatted = formatPhone(phone);
+  if (!formatted) return { ok: false, error: "invalid_phone" };
+
+  const instanceId = process.env.ZAPI_INSTANCE_ID.trim();
+  const token = process.env.ZAPI_TOKEN.trim();
+  const url = `https://api.z-api.io/instances/${instanceId}/token/${token}/send-text`;
+  const clientToken = process.env.ZAPI_CLIENT_TOKEN ? process.env.ZAPI_CLIENT_TOKEN.trim() : "";
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(clientToken ? { "Client-Token": clientToken } : {}),
+    },
+    body: JSON.stringify({ phone: formatted, message }),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) return { ok: false, error: data };
+  return { ok: true, data };
+}
+
+module.exports = { sendWhatsApp, sendWhatsAppRaw, sendGroupMessage, isWhatsAppEnabled };

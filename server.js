@@ -2,8 +2,8 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const { appendLeadToSheets, readLeadsFromSheets, appendReplyToSheets, readRepliesFromSheets, isSheetsEnabled } = require("./googleSheets");
-const { sendWhatsApp, sendGroupMessage, isWhatsAppEnabled } = require("./whatsapp");
+const { appendLeadToSheets, readLeadsFromSheets, appendReplyToSheets, readRepliesFromSheets, isSheetsEnabled, readAllStatuses, updateLeadStatus } = require("./googleSheets");
+const { sendWhatsApp, sendWhatsAppRaw, sendGroupMessage, isWhatsAppEnabled } = require("./whatsapp");
 
 // Simple in-memory rate limiter: max 5 lead submissions per IP per 60 s
 const rateLimitStore = new Map();
@@ -295,6 +295,80 @@ async function handleWebhook(req, res) {
   }
 }
 
+async function handleAdminStatuses(req, res) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
+
+  const auth = req.headers.authorization || "";
+  const tok = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (tok !== adminPassword) return sendJson(res, 401, { ok: false, error: "unauthorized" });
+
+  try {
+    const statuses = isSheetsEnabled() ? await readAllStatuses() : [];
+    return sendJson(res, 200, { ok: true, statuses: statuses || [] });
+  } catch {
+    return sendJson(res, 200, { ok: true, statuses: [] });
+  }
+}
+
+async function handleUpdateStatus(req, res) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
+
+  const auth = req.headers.authorization || "";
+  const tok = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (tok !== adminPassword) return sendJson(res, 401, { ok: false, error: "unauthorized" });
+
+  let payload;
+  try {
+    payload = await readBodyJson(req);
+  } catch {
+    return sendJson(res, 400, { ok: false, error: "invalid_json" });
+  }
+
+  const phone = normalizeString(payload.phone);
+  const status = normalizeString(payload.status);
+  const validStatuses = ["Novo", "Em contato", "Fechado", "Perdido"];
+  if (!phone || !validStatuses.includes(status)) {
+    return sendJson(res, 422, { ok: false, error: "invalid_input" });
+  }
+
+  try {
+    if (isSheetsEnabled()) await updateLeadStatus(phone, status);
+    return sendJson(res, 200, { ok: true });
+  } catch {
+    return sendJson(res, 500, { ok: false, error: "sheets_error" });
+  }
+}
+
+async function handleSendWhatsAppAdmin(req, res) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
+
+  const auth = req.headers.authorization || "";
+  const tok = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (tok !== adminPassword) return sendJson(res, 401, { ok: false, error: "unauthorized" });
+
+  let payload;
+  try {
+    payload = await readBodyJson(req);
+  } catch {
+    return sendJson(res, 400, { ok: false, error: "invalid_json" });
+  }
+
+  const phone = normalizeString(payload.phone);
+  const message = normalizeString(payload.message);
+  if (!phone || !message) return sendJson(res, 422, { ok: false, error: "missing_fields" });
+  if (!isWhatsAppEnabled()) return sendJson(res, 503, { ok: false, error: "whatsapp_not_configured" });
+
+  try {
+    const result = await sendWhatsAppRaw(phone, message);
+    return sendJson(res, result.ok ? 200 : 502, result);
+  } catch {
+    return sendJson(res, 500, { ok: false, error: "send_failed" });
+  }
+}
+
 async function handleAdminReplies(req, res) {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
@@ -408,6 +482,18 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname === "/api/admin/replies" && req.method === "GET") {
     return handleAdminReplies(req, res);
+  }
+
+  if (pathname === "/api/admin/statuses" && req.method === "GET") {
+    return handleAdminStatuses(req, res);
+  }
+
+  if (pathname === "/api/admin/status" && req.method === "POST") {
+    return handleUpdateStatus(req, res);
+  }
+
+  if (pathname === "/api/admin/send-whatsapp" && req.method === "POST") {
+    return handleSendWhatsAppAdmin(req, res);
   }
 
   if (pathname === "/api/webhook/zapi" && req.method === "POST") {

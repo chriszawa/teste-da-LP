@@ -50,8 +50,6 @@
       text-align: center;
       margin-bottom: 4px;
     }
-    .login-logo .nex { color: var(--offwhite); }
-    .login-logo .us { color: var(--roxo-vivo); }
     .login-subtitle { text-align: center; color: var(--cinza); font-size: 0.82rem; margin-bottom: 34px; letter-spacing: 1px; text-transform: uppercase; }
     .login-label { display: block; font-size: 0.72rem; font-weight: 500; color: var(--cinza); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.6px; }
     .login-input {
@@ -99,8 +97,6 @@
       z-index: 100;
     }
     .header-logo { font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
-    .header-logo .nex { color: var(--offwhite); }
-    .header-logo .us { color: var(--roxo-vivo); }
     .header-badge {
       font-size: 0.6rem;
       font-weight: 600;
@@ -114,9 +110,7 @@
     }
     .header-actions { display: flex; gap: 10px; align-items: center; }
     .btn-export {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      display: inline-flex; align-items: center; gap: 7px;
       padding: 9px 18px;
       background: rgba(123,47,190,0.1);
       border: 1px solid rgba(123,47,190,0.3);
@@ -131,9 +125,7 @@
     }
     .btn-export:hover { background: rgba(123,47,190,0.2); border-color: var(--roxo-claro); }
     .btn-refresh {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      display: inline-flex; align-items: center; gap: 7px;
       padding: 9px 14px;
       background: transparent;
       border: 1px solid var(--borda);
@@ -145,9 +137,7 @@
     }
     .btn-refresh:hover { border-color: var(--roxo-claro); color: var(--roxo-claro); }
     .btn-logout {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      display: inline-flex; align-items: center; gap: 7px;
       padding: 9px 14px;
       background: transparent;
       border: 1px solid var(--borda);
@@ -159,7 +149,7 @@
     }
     .btn-logout:hover { border-color: #ff6b6b; color: #ff6b6b; }
 
-    main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+    main { padding: 28px 32px; max-width: 1500px; margin: 0 auto; }
 
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
     .stat-card {
@@ -173,13 +163,7 @@
       transition: border-color 0.2s;
     }
     .stat-card:hover { border-color: rgba(123,47,190,0.4); }
-    .stat-icon {
-      width: 46px; height: 46px;
-      background: rgba(123,47,190,0.1);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--roxo-claro); font-size: 1.15rem; flex-shrink: 0;
-    }
+    .stat-icon { width: 46px; height: 46px; background: rgba(123,47,190,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--roxo-claro); font-size: 1.15rem; flex-shrink: 0; }
     .stat-value { font-family: var(--fonte-titulo); font-size: 2rem; font-weight: 800; line-height: 1; color: var(--offwhite); }
     .stat-label { font-size: 0.72rem; color: var(--cinza); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -227,6 +211,8 @@
     .table-count { font-size: 0.75rem; color: var(--cinza); }
     .table-scroll { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
+
+    /* Sortable headers */
     thead th {
       padding: 11px 16px;
       text-align: left;
@@ -239,12 +225,32 @@
       border-bottom: 1px solid var(--borda);
       white-space: nowrap;
     }
+    thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
+    }
+    thead th.sortable:hover { color: var(--roxo-claro); }
+    thead th.sort-active { color: var(--roxo-claro); }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.5; font-size: 0.6rem; }
+    thead th.sort-active .sort-arrow { opacity: 1; }
+
     tbody tr { border-bottom: 1px solid rgba(40,40,47,0.6); transition: background 0.15s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(123,47,190,0.04); }
+
+    /* Status row tinting */
+    tbody tr.status-em-contato { background: rgba(59,130,246,0.04); }
+    tbody tr.status-em-contato:hover { background: rgba(59,130,246,0.08); }
+    tbody tr.status-fechado { background: rgba(74,222,128,0.04); }
+    tbody tr.status-fechado:hover { background: rgba(74,222,128,0.08); }
+    tbody tr.status-perdido { background: rgba(248,113,113,0.04); }
+    tbody tr.status-perdido:hover { background: rgba(248,113,113,0.08); }
+
     tbody td { padding: 13px 16px; font-size: 0.85rem; color: var(--offwhite-dim); white-space: nowrap; }
     tbody td.col-nome { color: var(--offwhite); font-weight: 500; }
     tbody td.col-data { color: var(--cinza); font-size: 0.8rem; }
+
     .badge {
       display: inline-block;
       padding: 3px 10px;
@@ -263,15 +269,14 @@
       border-radius: 100px;
       font-size: 0.7rem;
       font-weight: 600;
-      background: rgba(74, 222, 128, 0.1);
-      border: 1px solid rgba(74, 222, 128, 0.3);
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.3);
       color: #4ade80;
-      cursor: default;
     }
     .reply-preview {
       font-size: 0.78rem;
       color: #4ade80;
-      max-width: 200px;
+      max-width: 160px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -286,9 +291,144 @@
       transition: opacity 0.2s;
     }
     .wa-link:hover { opacity: 0.75; }
+
+    /* Status dropdown in table */
+    .status-select {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--fonte-corpo);
+      outline: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a6575'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 7px center;
+      padding-right: 22px;
+    }
+    .status-select.s-novo { background-color: rgba(40,40,47,0.8); color: var(--cinza); border-color: var(--borda); }
+    .status-select.s-em-contato { background-color: rgba(59,130,246,0.15); color: #93c5fd; border-color: rgba(59,130,246,0.3); }
+    .status-select.s-fechado { background-color: rgba(74,222,128,0.12); color: #4ade80; border-color: rgba(74,222,128,0.3); }
+    .status-select.s-perdido { background-color: rgba(248,113,113,0.12); color: #f87171; border-color: rgba(248,113,113,0.3); }
+    .status-select option { background: var(--carvao); color: var(--offwhite); }
+
+    /* Send WA button */
+    .btn-wa-send {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.25);
+      color: #4ade80;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+    .btn-wa-send:hover { background: rgba(37,211,102,0.2); border-color: rgba(37,211,102,0.5); }
+
     .empty-state { text-align: center; padding: 60px 20px; color: var(--cinza); }
     .empty-state i { font-size: 2.2rem; display: block; margin-bottom: 14px; color: var(--cinza-medio); }
     .loading { text-align: center; padding: 60px; color: var(--cinza); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--grafite);
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 32px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      background: none;
+      border: none;
+      color: var(--cinza);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--offwhite); }
+    .modal-title {
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .modal-subtitle { font-size: 0.8rem; color: var(--cinza); margin-bottom: 20px; }
+    .modal-label { font-size: 0.72rem; font-weight: 500; color: var(--cinza); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; display: block; }
+    .modal-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--carvao);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      color: var(--offwhite);
+      font-family: var(--fonte-corpo);
+      font-size: 0.9rem;
+      outline: none;
+      resize: vertical;
+      min-height: 120px;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    .modal-textarea:focus { border-color: var(--roxo); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-cancel {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--borda);
+      color: var(--cinza);
+      border-radius: 8px;
+      font-family: var(--fonte-corpo);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-cancel:hover { border-color: var(--offwhite-dim); color: var(--offwhite); }
+    .btn-send {
+      padding: 10px 22px;
+      background: #25d366;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-send:hover { background: #1db954; }
+    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-feedback { font-size: 0.8rem; margin-top: 12px; text-align: center; min-height: 18px; }
+    .modal-feedback.ok { color: #4ade80; }
+    .modal-feedback.err { color: #f87171; }
 
     @media (max-width: 768px) {
       header { padding: 12px 16px; }
@@ -367,6 +507,13 @@
       <select class="filter-select" id="filter-faturamento" onchange="renderTable()">
         <option value="">Todos os faturamentos</option>
       </select>
+      <select class="filter-select" id="filter-status" onchange="renderTable()">
+        <option value="">Todos os status</option>
+        <option value="Novo">Novo</option>
+        <option value="Em contato">Em contato</option>
+        <option value="Fechado">Fechado</option>
+        <option value="Perdido">Perdido</option>
+      </select>
     </div>
 
     <div class="table-wrap">
@@ -378,18 +525,19 @@
         <table>
           <thead>
             <tr>
-              <th>Data</th>
-              <th>Nome</th>
+              <th class="sortable" data-col="createdAt">Data <span class="sort-arrow">▼</span></th>
+              <th class="sortable" data-col="nome">Nome <span class="sort-arrow">▲▼</span></th>
               <th>WhatsApp</th>
               <th>E-mail</th>
-              <th>Restaurante</th>
+              <th class="sortable" data-col="empresa">Restaurante <span class="sort-arrow">▲▼</span></th>
               <th>Segmento</th>
-              <th>Faturamento</th>
+              <th class="sortable" data-col="faturamento">Faturamento <span class="sort-arrow">▲▼</span></th>
               <th>Resposta</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody id="table-body">
-            <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
+            <tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-spin"></i></td></tr>
           </tbody>
         </table>
       </div>
@@ -397,11 +545,62 @@
   </main>
 </div>
 
+<!-- WhatsApp Modal -->
+<div class="modal-overlay" id="wa-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fab fa-whatsapp" style="color:#25d366;margin-right:8px"></i>Enviar mensagem</div>
+    <div class="modal-subtitle" id="modal-subtitle">para —</div>
+    <label class="modal-label" for="modal-msg">Mensagem</label>
+    <textarea class="modal-textarea" id="modal-msg" placeholder="Digite a mensagem..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-send" id="modal-send-btn" onclick="sendModalMessage()">
+        <i class="fab fa-whatsapp"></i> Enviar
+      </button>
+    </div>
+    <div class="modal-feedback" id="modal-feedback"></div>
+  </div>
+</div>
+
 <script>
 let allLeads = [];
 let allReplies = [];
+let allStatuses = [];
 let token = "";
+let sortCol = "createdAt";
+let sortDir = "desc";
+let modalPhone = "";
 
+// ── Sort headers ────────────────────────────────────────────────
+document.querySelectorAll("thead th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (sortCol === col) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+    } else {
+      sortCol = col;
+      sortDir = col === "createdAt" ? "desc" : "asc";
+    }
+    updateSortHeaders();
+    renderTable();
+  });
+});
+
+function updateSortHeaders() {
+  document.querySelectorAll("thead th.sortable").forEach(th => {
+    const col = th.dataset.col;
+    const arrow = th.querySelector(".sort-arrow");
+    th.classList.toggle("sort-active", col === sortCol);
+    if (col === sortCol) {
+      arrow.textContent = sortDir === "asc" ? "▲" : "▼";
+    } else {
+      arrow.textContent = "▲▼";
+    }
+  });
+}
+
+// ── Auth ─────────────────────────────────────────────────────────
 function login() {
   const senha = document.getElementById("senha").value.trim();
   if (!senha) return;
@@ -417,6 +616,7 @@ function login() {
         sessionStorage.setItem("admin_token", senha);
         allLeads = data.leads;
         showDashboard();
+        loadRepliesAndStatuses();
       } else {
         document.getElementById("login-error").style.display = "block";
       }
@@ -435,6 +635,8 @@ function logout() {
   sessionStorage.removeItem("admin_token");
   token = "";
   allLeads = [];
+  allReplies = [];
+  allStatuses = [];
   document.getElementById("dashboard").style.display = "none";
   document.getElementById("login-screen").style.display = "flex";
   document.getElementById("senha").value = "";
@@ -449,35 +651,59 @@ function showDashboard() {
   renderTable();
 }
 
+// ── Data loading ──────────────────────────────────────────────────
+function loadRepliesAndStatuses() {
+  if (!token) return;
+  Promise.all([
+    fetch("/api/admin/replies",   { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+    fetch("/api/admin/statuses",  { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+  ]).then(([repliesData, statusesData]) => {
+    if (repliesData.ok)  allReplies  = repliesData.replies;
+    if (statusesData.ok) allStatuses = statusesData.statuses;
+    renderTable();
+  }).catch(() => {});
+}
+
+function loadLeads() {
+  if (!token) return;
+  const icon = document.querySelector(".btn-refresh i");
+  icon.classList.add("fa-spin");
+
+  Promise.all([
+    fetch("/api/admin/leads",    { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+    fetch("/api/admin/replies",  { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+    fetch("/api/admin/statuses", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
+  ])
+    .then(([leadsData, repliesData, statusesData]) => {
+      if (leadsData.ok)    allLeads    = leadsData.leads;
+      if (repliesData.ok)  allReplies  = repliesData.replies;
+      if (statusesData.ok) allStatuses = statusesData.statuses;
+      updateStats();
+      populateFilters();
+      renderTable();
+    })
+    .catch(() => {})
+    .finally(() => icon.classList.remove("fa-spin"));
+}
+
+// ── Phone normalization ───────────────────────────────────────────
 function normalizePhone(phone) {
   const d = String(phone || "").replace(/\D/g, "");
   return d.startsWith("55") && d.length > 11 ? d.slice(2) : d;
 }
 
 function getReplyForLead(lead) {
-  const leadPhone = normalizePhone(lead.telefone);
-  return allReplies.find(r => normalizePhone(r.phone) === leadPhone) || null;
+  const lp = normalizePhone(lead.telefone);
+  return allReplies.find(r => normalizePhone(r.phone) === lp) || null;
 }
 
-function loadLeads() {
-  if (!token) return;
-  const btn = document.querySelector(".btn-refresh i");
-  btn.classList.add("fa-spin");
-
-  Promise.all([
-    fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
-    fetch("/api/admin/replies", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json()),
-  ])
-    .then(([leadsData, repliesData]) => {
-      if (leadsData.ok) allLeads = leadsData.leads;
-      if (repliesData.ok) allReplies = repliesData.replies;
-      updateStats();
-      renderTable();
-    })
-    .catch(() => {})
-    .finally(() => btn.classList.remove("fa-spin"));
+function getStatusForLead(lead) {
+  const lp = normalizePhone(lead.telefone);
+  const entry = allStatuses.find(s => normalizePhone(s.phone) === lp);
+  return entry ? entry.status : "Novo";
 }
 
+// ── Stats ─────────────────────────────────────────────────────────
 function updateStats() {
   const now = new Date();
   const hoje = now.toISOString().slice(0, 10);
@@ -490,32 +716,56 @@ function updateStats() {
 function populateFilters() {
   const segSel = document.getElementById("filter-segmento");
   const fatSel = document.getElementById("filter-faturamento");
+  const segVal = segSel.value;
+  const fatVal = fatSel.value;
   segSel.innerHTML = '<option value="">Todos os segmentos</option>';
   fatSel.innerHTML = '<option value="">Todos os faturamentos</option>';
-
   [...new Set(allLeads.map(l => l.segmento).filter(Boolean))].sort().forEach(s => {
     segSel.appendChild(Object.assign(document.createElement("option"), { value: s, textContent: s }));
   });
   [...new Set(allLeads.map(l => l.faturamento).filter(Boolean))].forEach(f => {
     fatSel.appendChild(Object.assign(document.createElement("option"), { value: f, textContent: f }));
   });
+  segSel.value = segVal;
+  fatSel.value = fatVal;
 }
 
+// ── Sorting ───────────────────────────────────────────────────────
+function sortLeads(leads) {
+  return [...leads].sort((a, b) => {
+    let va = a[sortCol] || "";
+    let vb = b[sortCol] || "";
+    if (sortCol === "createdAt") {
+      va = va ? new Date(va).getTime() : 0;
+      vb = vb ? new Date(vb).getTime() : 0;
+      return sortDir === "asc" ? va - vb : vb - va;
+    }
+    va = String(va).toLowerCase();
+    vb = String(vb).toLowerCase();
+    return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+}
+
+// ── Render table ──────────────────────────────────────────────────
 function renderTable() {
   const search = document.getElementById("search").value.toLowerCase();
-  const segmento = document.getElementById("filter-segmento").value;
+  const segmento   = document.getElementById("filter-segmento").value;
   const faturamento = document.getElementById("filter-faturamento").value;
+  const statusFilter = document.getElementById("filter-status").value;
 
-  const filtered = allLeads.filter(l => {
+  let filtered = allLeads.filter(l => {
     const matchSearch = !search || [l.nome, l.email, l.empresa, l.telefone].some(v => v && v.toLowerCase().includes(search));
-    return matchSearch && (!segmento || l.segmento === segmento) && (!faturamento || l.faturamento === faturamento);
+    const matchStatus = !statusFilter || getStatusForLead(l) === statusFilter;
+    return matchSearch && matchStatus && (!segmento || l.segmento === segmento) && (!faturamento || l.faturamento === faturamento);
   });
+
+  filtered = sortLeads(filtered);
 
   document.getElementById("table-count").textContent = filtered.length + " lead" + (filtered.length !== 1 ? "s" : "");
 
   const tbody = document.getElementById("table-body");
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i>Nenhum lead encontrado</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" class="empty-state"><i class="fas fa-inbox"></i>Nenhum lead encontrado</td></tr>`;
     return;
   }
 
@@ -524,23 +774,147 @@ function renderTable() {
     const waLink = tel
       ? `<a class="wa-link" href="https://wa.me/55${tel}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i>${esc(l.telefone)}</a>`
       : esc(l.telefone) || "—";
+
     const reply = getReplyForLead(l);
     const replyCell = reply
       ? `<span class="badge-reply" title="${esc(reply.message)}"><i class="fas fa-reply"></i> Respondeu</span><div class="reply-preview">${esc(reply.message)}</div>`
       : `<span style="color:var(--cinza-medio);font-size:0.75rem;">—</span>`;
-    return `<tr>
+
+    const status = getStatusForLead(l);
+    const statusClass = {
+      "Novo":       "s-novo",
+      "Em contato": "s-em-contato",
+      "Fechado":    "s-fechado",
+      "Perdido":    "s-perdido",
+    }[status] || "s-novo";
+    const rowClass = {
+      "Em contato": "status-em-contato",
+      "Fechado":    "status-fechado",
+      "Perdido":    "status-perdido",
+    }[status] || "";
+
+    const phoneRaw = l.telefone || "";
+    const phoneEscaped = esc(phoneRaw).replace(/'/g, "\\'");
+
+    const statusSelect = `<select class="status-select ${statusClass}" onchange="changeStatus(this,'${phoneEscaped}')">
+      <option ${status==="Novo"?"selected":""}>Novo</option>
+      <option ${status==="Em contato"?"selected":""}>Em contato</option>
+      <option ${status==="Fechado"?"selected":""}>Fechado</option>
+      <option ${status==="Perdido"?"selected":""}>Perdido</option>
+    </select>`;
+
+    const sendBtn = tel
+      ? `<button class="btn-wa-send" onclick="openModal('${phoneEscaped}','${esc(l.nome).replace(/'/g,"\\'")}')"><i class="fab fa-whatsapp"></i> Enviar</button>`
+      : "";
+
+    return `<tr class="${rowClass}">
       <td class="col-data">${fmtDate(l.createdAt)}</td>
       <td class="col-nome">${esc(l.nome)}</td>
-      <td>${waLink}</td>
+      <td><div>${waLink}</div>${sendBtn}</td>
       <td>${esc(l.email)}</td>
       <td>${esc(l.empresa)}</td>
       <td><span class="badge">${esc(l.segmento)}</span></td>
       <td>${esc(l.faturamento)}</td>
       <td>${replyCell}</td>
+      <td>${statusSelect}</td>
     </tr>`;
   }).join("");
 }
 
+// ── Status change ─────────────────────────────────────────────────
+function changeStatus(select, phone) {
+  const status = select.value;
+  const classMap = {
+    "Novo":       "s-novo",
+    "Em contato": "s-em-contato",
+    "Fechado":    "s-fechado",
+    "Perdido":    "s-perdido",
+  };
+  select.className = "status-select " + (classMap[status] || "s-novo");
+
+  // Update row tint
+  const row = select.closest("tr");
+  row.classList.remove("status-em-contato", "status-fechado", "status-perdido");
+  if (status === "Em contato") row.classList.add("status-em-contato");
+  else if (status === "Fechado") row.classList.add("status-fechado");
+  else if (status === "Perdido") row.classList.add("status-perdido");
+
+  // Update local cache
+  const pn = normalizePhone(phone);
+  const existing = allStatuses.find(s => normalizePhone(s.phone) === pn);
+  if (existing) existing.status = status;
+  else allStatuses.push({ phone, status, updatedAt: new Date().toISOString() });
+
+  fetch("/api/admin/status", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, status }),
+  }).catch(() => {});
+}
+
+// ── WhatsApp Modal ────────────────────────────────────────────────
+function openModal(phone, nome) {
+  modalPhone = phone;
+  document.getElementById("modal-subtitle").textContent = "para " + (nome || phone);
+  document.getElementById("modal-msg").value = "";
+  document.getElementById("modal-feedback").textContent = "";
+  document.getElementById("modal-feedback").className = "modal-feedback";
+  document.getElementById("modal-send-btn").disabled = false;
+  document.getElementById("wa-modal").classList.add("open");
+  setTimeout(() => document.getElementById("modal-msg").focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById("wa-modal").classList.remove("open");
+  modalPhone = "";
+}
+
+document.getElementById("wa-modal").addEventListener("click", e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+});
+
+function sendModalMessage() {
+  const message = document.getElementById("modal-msg").value.trim();
+  if (!message || !modalPhone) return;
+
+  const btn = document.getElementById("modal-send-btn");
+  const feedback = document.getElementById("modal-feedback");
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+  feedback.textContent = "";
+  feedback.className = "modal-feedback";
+
+  fetch("/api/admin/send-whatsapp", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+    body: JSON.stringify({ phone: modalPhone, message }),
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        feedback.textContent = "✓ Mensagem enviada com sucesso!";
+        feedback.className = "modal-feedback ok";
+        setTimeout(closeModal, 1500);
+      } else {
+        feedback.textContent = "Erro ao enviar. Tente novamente.";
+        feedback.className = "modal-feedback err";
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar';
+      }
+    })
+    .catch(() => {
+      feedback.textContent = "Erro de conexão.";
+      feedback.className = "modal-feedback err";
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar';
+    });
+}
+
+// ── Helpers ────────────────────────────────────────────────────────
 function fmtDate(iso) {
   if (!iso) return "—";
   try {
@@ -555,10 +929,10 @@ function esc(str) {
 }
 
 function exportCSV() {
-  const cols = ["Data","Nome","Telefone","Email","Restaurante","Segmento","Faturamento"];
+  const cols = ["Data","Nome","Telefone","Email","Restaurante","Segmento","Faturamento","Status"];
   const rows = allLeads.map(l => [
     l.createdAt ? new Date(l.createdAt).toLocaleString("pt-BR") : "",
-    l.nome, l.telefone, l.email, l.empresa, l.segmento, l.faturamento
+    l.nome, l.telefone, l.email, l.empresa, l.segmento, l.faturamento, getStatusForLead(l)
   ].map(v => `"${(v || "").replace(/"/g, '""')}"`).join(","));
 
   const csv = [cols.join(","), ...rows].join("\n");
@@ -571,20 +945,25 @@ function exportCSV() {
   URL.revokeObjectURL(a.href);
 }
 
+// ── Init ────────────────────────────────────────────────────────────
 document.getElementById("senha").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
 document.getElementById("login-btn").addEventListener("click", login);
+
+updateSortHeaders();
 
 const saved = sessionStorage.getItem("admin_token");
 if (saved) {
   Promise.all([
-    fetch("/api/admin/leads", { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
-    fetch("/api/admin/replies", { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
+    fetch("/api/admin/leads",    { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
+    fetch("/api/admin/replies",  { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
+    fetch("/api/admin/statuses", { headers: { "Authorization": "Bearer " + saved } }).then(r => r.json()),
   ])
-    .then(([leadsData, repliesData]) => {
+    .then(([leadsData, repliesData, statusesData]) => {
       if (leadsData.ok) {
         token = saved;
-        allLeads = leadsData.leads;
-        if (repliesData.ok) allReplies = repliesData.replies;
+        allLeads    = leadsData.leads;
+        if (repliesData.ok)  allReplies  = repliesData.replies;
+        if (statusesData.ok) allStatuses = statusesData.statuses;
         showDashboard();
       }
     })
