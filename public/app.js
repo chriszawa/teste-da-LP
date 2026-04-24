@@ -205,8 +205,80 @@ function initLeadForm() {
   });
 }
 
+function initMouseLight() {
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+
+  const light = document.createElement("div");
+  light.id = "mouse-light";
+  document.body.appendChild(light);
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let currentX = targetX;
+  let currentY = targetY;
+  let visible = false;
+  let t = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!visible) {
+      currentX = targetX;
+      currentY = targetY;
+      light.style.opacity = "1";
+      visible = true;
+    }
+  });
+
+  document.addEventListener("mouseleave", () => { light.style.opacity = "0"; });
+  document.addEventListener("mouseenter", () => { light.style.opacity = "1"; });
+
+  (function animate() {
+    t += 0.004;
+
+    // Segue o mouse suavemente
+    currentX += (targetX - currentX) * 0.06;
+    currentY += (targetY - currentY) * 0.06;
+
+    // Deriva orgânica: múltiplas frequências criam movimento não repetitivo
+    const driftX = Math.sin(t * 1.3) * 55 + Math.cos(t * 0.6) * 30 + Math.sin(t * 2.1) * 12;
+    const driftY = Math.cos(t * 1.0) * 45 + Math.sin(t * 0.8) * 35 + Math.cos(t * 1.8) * 18;
+
+    light.style.setProperty("--x", (currentX + driftX) + "px");
+    light.style.setProperty("--y", (currentY + driftY) + "px");
+
+    requestAnimationFrame(animate);
+  })();
+
+  // Luz reativa nos cards
+  const cardSelectors = [
+    ".testimonial-card",
+    ".service-card",
+    ".stat-box",
+    ".form-card",
+    ".pillar-row",
+    ".step-item",
+  ].join(", ");
+
+  document.querySelectorAll(cardSelectors).forEach((card) => {
+    card.classList.add("reactive-card");
+
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--card-x", (e.clientX - rect.left) + "px");
+      card.style.setProperty("--card-y", (e.clientY - rect.top) + "px");
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--card-x", "-9999px");
+      card.style.setProperty("--card-y", "-9999px");
+    });
+  });
+}
+
 initNavbarScroll();
 initReveal();
 initFaqAccordion();
 initSmoothScroll();
 initLeadForm();
+initMouseLight();
