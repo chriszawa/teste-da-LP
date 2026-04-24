@@ -1,0 +1,17 @@
+{
+  "name": "nexus-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Site Nexus (frontend estático + backend simples para leads).",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "googleapis": "^159.0.0"
+  }
+}

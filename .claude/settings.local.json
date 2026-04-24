@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node --check server.js)",
+      "Bash(node --check googleSheets.js)",
+      "Bash(pkill -f \"node server.js\")"
+    ]
+  }
+}

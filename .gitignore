@@ -1,0 +1,8 @@
+data/
+*.log
+.env
+.env.*
+.node-version
+.npmrc
+.DS_Store
+service-account*.json
