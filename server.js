@@ -243,6 +243,33 @@ async function handleCreateLead(req, res) {
   return sendJson(res, 200, { ok: true, id: record.id });
 }
 
+function handleAdminLeads(req, res) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
+  }
+
+  const auth = req.headers.authorization || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (token !== adminPassword) {
+    return sendJson(res, 401, { ok: false, error: "unauthorized" });
+  }
+
+  if (!fs.existsSync(LEADS_FILE)) {
+    return sendJson(res, 200, { ok: true, leads: [] });
+  }
+
+  const raw = fs.readFileSync(LEADS_FILE, "utf8");
+  const leads = raw
+    .split("\n")
+    .filter((line) => line.trim())
+    .map((line) => { try { return JSON.parse(line); } catch { return null; } })
+    .filter(Boolean)
+    .reverse();
+
+  return sendJson(res, 200, { ok: true, leads });
+}
+
 function serveStatic(req, res, pathname) {
   let filePath = safeJoinPublic(pathname);
 
@@ -297,6 +324,14 @@ const server = http.createServer(async (req, res) => {
 
   if (pathname === "/api/leads" && req.method === "POST") {
     return handleCreateLead(req, res);
+  }
+
+  if (pathname === "/api/admin/leads" && req.method === "GET") {
+    return handleAdminLeads(req, res);
+  }
+
+  if (pathname === "/admin") {
+    return serveStatic(req, res, "/admin.html");
   }
 
   if (pathname.startsWith("/api/")) {
