@@ -2,7 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const { appendLeadToSheets, isSheetsEnabled } = require("./googleSheets");
+const { appendLeadToSheets, readLeadsFromSheets, isSheetsEnabled } = require("./googleSheets");
 const { sendWhatsApp, isWhatsAppEnabled } = require("./whatsapp");
 
 // Simple in-memory rate limiter: max 5 lead submissions per IP per 60 s
@@ -248,7 +248,7 @@ async function handleCreateLead(req, res) {
   return sendJson(res, 200, { ok: true, id: record.id });
 }
 
-function handleAdminLeads(req, res) {
+async function handleAdminLeads(req, res) {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) {
     return sendJson(res, 503, { ok: false, error: "admin_not_configured" });
@@ -258,6 +258,14 @@ function handleAdminLeads(req, res) {
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
   if (token !== adminPassword) {
     return sendJson(res, 401, { ok: false, error: "unauthorized" });
+  }
+
+  // Lê do Google Sheets se disponível (persistente), senão cai no arquivo local
+  if (isSheetsEnabled()) {
+    try {
+      const leads = await readLeadsFromSheets();
+      if (leads !== null) return sendJson(res, 200, { ok: true, leads });
+    } catch { /* cai no fallback local */ }
   }
 
   if (!fs.existsSync(LEADS_FILE)) {
