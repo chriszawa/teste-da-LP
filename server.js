@@ -248,7 +248,7 @@ async function handleCreateLead(req, res) {
   return sendJson(res, 200, { ok: true, id: record.id });
 }
 
-async async function handleWebhook(req, res) {
+async function handleWebhook(req, res) {
   res.writeHead(200);
   res.end("ok");
 
