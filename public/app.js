@@ -180,19 +180,8 @@ function initLeadForm() {
         throw new Error(data?.error || "request_failed");
       }
 
-      const formCard = form.closest(".form-card");
-      if (formCard) {
-        formCard.innerHTML = `
-          <div class="form-success">
-            <div class="form-success-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></div>
-            <h3>Recebemos seu contato!</h3>
-            <p>Um especialista da Nexus entrará em contato pelo WhatsApp em até 5 minutos em horário comercial.</p>
-            <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Acabei%20de%20solicitar%20um%20diagn%C3%B3stico%20gratuito%20pela%20Nexus." class="btn-primary" target="_blank" rel="noopener noreferrer">
-              Falar agora no WhatsApp <i class="fab fa-whatsapp"></i>
-            </a>
-          </div>
-        `;
-      }
+      const isAteh30k = payload.faturamento === "Até R$ 30 mil";
+      window.location.href = isAteh30k ? "/obrigado-b" : "/obrigado";
     } catch (err) {
       const msg = err?.status === 429
         ? "Muitas tentativas. Aguarde um momento e tente novamente."
@@ -315,6 +304,62 @@ function initVideoCarousel() {
   });
 }
 
+function initServicesCarousel() {
+  const track = document.querySelector(".services-track");
+  const dots = document.querySelectorAll(".svc-dot");
+  const prev = document.querySelector(".svc-prev");
+  const next = document.querySelector(".svc-next");
+  if (!track) return;
+
+  const pages = track.querySelectorAll(".services-page");
+  let current = 0;
+
+  // Equaliza altura de todos os cards
+  const allCards = track.querySelectorAll(".service-card");
+  let maxH = 0;
+  allCards.forEach((c) => { maxH = Math.max(maxH, c.offsetHeight); });
+  allCards.forEach((c) => { c.style.minHeight = maxH + "px"; });
+
+  function goTo(index) {
+    current = (index + pages.length) % pages.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle("active", i === current));
+  }
+
+  prev?.addEventListener("click", () => goTo(current - 1));
+  next?.addEventListener("click", () => goTo(current + 1));
+  dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
+
+  let startX = 0;
+  track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener("touchend", (e) => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+  });
+}
+
+function initMethodAccordion() {
+  document.querySelectorAll(".pillar-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      const isOpen = row.classList.contains("open");
+      document.querySelectorAll(".pillar-row").forEach((r) => r.classList.remove("open"));
+      if (!isOpen) row.classList.add("open");
+    });
+  });
+}
+
+function initInvestQuestion() {
+  const select = document.getElementById("faturamento");
+  const field = document.getElementById("investQuestion");
+  if (!select || !field) return;
+
+  select.addEventListener("change", () => {
+    const show = select.value === "Até R$ 30 mil";
+    field.classList.toggle("visible", show);
+    if (!show) field.querySelectorAll('input[type="radio"]').forEach((r) => (r.checked = false));
+  });
+}
+
 initNavbarScroll();
 initReveal();
 initFaqAccordion();
@@ -322,3 +367,6 @@ initSmoothScroll();
 initLeadForm();
 initMouseLight();
 initVideoCarousel();
+initServicesCarousel();
+initMethodAccordion();
+initInvestQuestion();

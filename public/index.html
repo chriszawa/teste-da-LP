@@ -39,9 +39,8 @@
       <div class="hero-inner">
         <div class="hero-badge reveal">Marketing para Restaurantes</div>
         <h1 class="reveal reveal-delay-1">
-          Seu restaurante pode<br />
-          <em>fechar mais pedidos</em><br />
-          todo mês.
+          Seu restaurante pode fechar<br />
+          <em>mais pedidos</em>
         </h1>
         <p class="hero-sub reveal reveal-delay-2">
           Estratégias de marketing digital validadas no nicho gastronômico. Mais
@@ -58,20 +57,6 @@
               <span>RC</span><span>MB</span><span>LF</span><span>AK</span>
             </div>
             <span>+200 restaurantes atendidos</span>
-          </div>
-        </div>
-        <div class="hero-stats reveal">
-          <div>
-            <div class="stat-num">R$5<span>M+</span></div>
-            <div class="stat-label">Em vendas geradas</div>
-          </div>
-          <div>
-            <div class="stat-num">200<span>+</span></div>
-            <div class="stat-label">Restaurantes atendidos</div>
-          </div>
-          <div>
-            <div class="stat-num">98<span>%</span></div>
-            <div class="stat-label">De satisfação dos clientes</div>
           </div>
         </div>
       </div>
@@ -216,6 +201,21 @@
                 </select>
                 <div class="field-help" data-for="faturamento"></div>
               </div>
+              <div class="form-group invest-field" id="investQuestion">
+                <p class="invest-label">Você investiria 2 mil reais em marketing?</p>
+                <div class="invest-options">
+                  <label class="invest-option">
+                    <input type="radio" name="investimento_marketing" value="sim" />
+                    <span class="invest-dot"></span>
+                    Sim
+                  </label>
+                  <label class="invest-option">
+                    <input type="radio" name="investimento_marketing" value="nao" />
+                    <span class="invest-dot"></span>
+                    Não
+                  </label>
+                </div>
+              </div>
               <!-- Honeypot: invisível para humanos, bots preenchem e são filtrados -->
               <div class="hp-field" aria-hidden="true">
                 <label for="hp_website">Website</label>
@@ -323,49 +323,64 @@
         </div>
         <div class="pillars-list">
           <div class="pillar-row reveal">
-            <span class="pillar-index">01</span>
-            <div class="pillar-icon"><i class="fas fa-users"></i></div>
-            <span class="pillar-name">Engajamento</span>
-            <span class="pillar-desc"
-              >Criamos conexão real com o seu público-alvo, gerando autoridade e desejo pelo seu cardápio.</span
-            >
-            <i class="fas fa-arrow-right pillar-arrow"></i>
+            <div class="pillar-header">
+              <span class="pillar-index">01</span>
+              <div class="pillar-icon"><i class="fas fa-users"></i></div>
+              <span class="pillar-name">Engajamento</span>
+              <span class="pillar-desc">Criamos conexão real com o seu público-alvo, gerando autoridade e desejo pelo seu cardápio.</span>
+              <i class="fas fa-chevron-down pillar-arrow"></i>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-body-inner">Posts estratégicos, stories interativos e conteúdo de autoridade publicados nos horários de maior alcance. Construímos uma presença digital que faz o cliente lembrar do seu restaurante na hora da fome.</div>
+            </div>
           </div>
           <div class="pillar-row reveal reveal-delay-1">
-            <span class="pillar-index">02</span>
-            <div class="pillar-icon"><i class="fas fa-bolt"></i></div>
-            <span class="pillar-name">Ativação</span>
-            <span class="pillar-desc"
-              >Transformamos seguidores em clientes ativos com campanhas de conversão cirúrgicas.</span
-            >
-            <i class="fas fa-arrow-right pillar-arrow"></i>
+            <div class="pillar-header">
+              <span class="pillar-index">02</span>
+              <div class="pillar-icon"><i class="fas fa-bolt"></i></div>
+              <span class="pillar-name">Ativação</span>
+              <span class="pillar-desc">Transformamos seguidores em clientes ativos com campanhas de conversão cirúrgicas.</span>
+              <i class="fas fa-chevron-down pillar-arrow"></i>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-body-inner">Campanhas de oferta por tempo limitado, remarketing para quem já visitou seu perfil e gatilhos de urgência que levam o cliente a pedir agora — não amanhã.</div>
+            </div>
           </div>
           <div class="pillar-row reveal reveal-delay-2">
-            <span class="pillar-index">03</span>
-            <div class="pillar-icon"><i class="fas fa-sync"></i></div>
-            <span class="pillar-name">Retenção</span>
-            <span class="pillar-desc"
-              >Fazemos o cliente comprar de você repetidas vezes com estratégias de fidelização.</span
-            >
-            <i class="fas fa-arrow-right pillar-arrow"></i>
+            <div class="pillar-header">
+              <span class="pillar-index">03</span>
+              <div class="pillar-icon"><i class="fas fa-sync"></i></div>
+              <span class="pillar-name">Retenção</span>
+              <span class="pillar-desc">Fazemos o cliente comprar de você repetidas vezes com estratégias de fidelização.</span>
+              <i class="fas fa-chevron-down pillar-arrow"></i>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-body-inner">Disparos de WhatsApp segmentados, comunicação recorrente e ofertas exclusivas para quem já é cliente. Quem comprou uma vez volta a comprar — com a estratégia certa.</div>
+            </div>
           </div>
           <div class="pillar-row reveal">
-            <span class="pillar-index">04</span>
-            <div class="pillar-icon"><i class="fas fa-plus-circle"></i></div>
-            <span class="pillar-name">Aquisição</span>
-            <span class="pillar-desc"
-              >Novos clientes entrando todos os dias no seu funil de vendas de forma previsível.</span
-            >
-            <i class="fas fa-arrow-right pillar-arrow"></i>
+            <div class="pillar-header">
+              <span class="pillar-index">04</span>
+              <div class="pillar-icon"><i class="fas fa-plus-circle"></i></div>
+              <span class="pillar-name">Aquisição</span>
+              <span class="pillar-desc">Novos clientes entrando todos os dias no seu funil de vendas de forma previsível.</span>
+              <i class="fas fa-chevron-down pillar-arrow"></i>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-body-inner">Tráfego pago no Meta, Google e iFood direcionado para o público certo — pessoas próximas ao seu restaurante que têm perfil de compra. Escalamos o volume de novos pedidos de forma controlada.</div>
+            </div>
           </div>
           <div class="pillar-row reveal reveal-delay-1">
-            <span class="pillar-index">05</span>
-            <div class="pillar-icon"><i class="fas fa-dollar-sign"></i></div>
-            <span class="pillar-name">Monetização</span>
-            <span class="pillar-desc"
-              >Maximizamos o lucro por cada pedido com estratégias de upsell e aumento de ticket médio.</span
-            >
-            <i class="fas fa-arrow-right pillar-arrow"></i>
+            <div class="pillar-header">
+              <span class="pillar-index">05</span>
+              <div class="pillar-icon"><i class="fas fa-dollar-sign"></i></div>
+              <span class="pillar-name">Monetização</span>
+              <span class="pillar-desc">Maximizamos o lucro por cada pedido com estratégias de upsell e aumento de ticket médio.</span>
+              <i class="fas fa-chevron-down pillar-arrow"></i>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-body-inner">Cardápio digital otimizado, combos estratégicos e sugestões de upsell no momento certo. Aumentamos o valor médio de cada pedido sem que o cliente sinta que está gastando mais.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -376,33 +391,65 @@
       <div class="container">
         <p class="section-label reveal">O que fazemos</p>
         <h2 class="section-title reveal">Estruturamos o marketing<br />do seu restaurante</h2>
-        <div class="services-grid">
-          <div class="service-card reveal">
-            <div class="service-number">Bloco 01</div>
-            <div class="service-icon"><i class="fas fa-video"></i></div>
-            <h3>Criativos e Vídeos</h3>
-            <p>
-              Produção estratégica de conteúdo que gera desejo, dá fome e leva o
-              cliente direto ao pedido.
-            </p>
+        <div class="services-carousel">
+          <div class="services-viewport">
+            <div class="services-track">
+              <div class="services-page">
+                <div class="service-card">
+                  <div class="service-number">Bloco 01</div>
+                  <div class="service-icon"><i class="fas fa-video"></i></div>
+                  <h3>Criativos e Vídeos</h3>
+                  <p>Produção estratégica de conteúdo que gera desejo, dá fome e leva o cliente direto ao pedido.</p>
+                </div>
+                <div class="service-card">
+                  <div class="service-number">Bloco 02</div>
+                  <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                  <h3>Relatórios e Acompanhamento</h3>
+                  <p>Análise contínua de dados e performance para otimização constante das campanhas e resultados.</p>
+                </div>
+                <div class="service-card">
+                  <div class="service-number">Bloco 03</div>
+                  <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                  <h3>Cardápio Digital</h3>
+                  <p>Otimização completa da jornada de compra do seu cliente para maximizar o ticket médio.</p>
+                </div>
+              </div>
+              <div class="services-page">
+                <div class="service-card">
+                  <div class="service-number">Bloco 04</div>
+                  <div class="service-icon"><i class="fas fa-paper-plane"></i></div>
+                  <h3>Disparo de Mensagens Inteligente</h3>
+                  <p>Campanhas automáticas de vendas: promoções, combos e novidades direto no WhatsApp do seu cliente. Reativação de clientes antigos: trazemos de volta quem já comprou e parou de pedir.</p>
+                </div>
+                <div class="service-card">
+                  <div class="service-number">Bloco 05</div>
+                  <div class="service-icon"><i class="fas fa-users-cog"></i></div>
+                  <h3>Gestão e Atendimento</h3>
+                  <p>Estratégias de growth aplicadas à realidade do seu restaurante com visão de longo prazo. Contamos com um time formado e acompanhado de perto por gestores de alta performance.</p>
+                </div>
+                <div class="service-card">
+                  <div class="service-number">Bloco 06</div>
+                  <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+                  <h3>Mídia Paga</h3>
+                  <p>Gestão dos seus anúncios no Instagram, Facebook e iFood. Impactamos seu público ideal com anúncios feitos para quem tem fome de comprar. Transformamos desconhecidos em clientes fiéis com tráfego direcionado e estratégia afiada.</p>
+                </div>
+              </div>
+              <div class="services-page">
+                <div class="service-card">
+                  <div class="service-number">Bloco 07</div>
+                  <div class="service-icon"><i class="fas fa-handshake"></i></div>
+                  <h3>Soluções Comerciais para Restaurantes</h3>
+                  <p>Scripts, processos e ferramentas prontos para aumentar seus pedidos e reservas. Treinamos seus atendentes para venderem mais no balcão, salão ou WhatsApp.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="service-card reveal reveal-delay-1">
-            <div class="service-number">Bloco 02</div>
-            <div class="service-icon"><i class="fas fa-chart-line"></i></div>
-            <h3>Relatórios e Acompanhamento</h3>
-            <p>
-              Análise contínua de dados e performance para otimização constante
-              das campanhas e resultados.
-            </p>
-          </div>
-          <div class="service-card reveal reveal-delay-2">
-            <div class="service-number">Bloco 03</div>
-            <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
-            <h3>Cardápio Digital</h3>
-            <p>
-              Otimização completa da jornada de compra do seu cliente para
-              maximizar o ticket médio.
-            </p>
+          <button class="svc-btn svc-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+          <button class="svc-btn svc-next" aria-label="Próximo"><i class="fas fa-chevron-right"></i></button>
+          <div class="svc-dots">
+            <button class="svc-dot active" aria-label="Página 1"></button>
+            <button class="svc-dot" aria-label="Página 2"></button>
+            <button class="svc-dot" aria-label="Página 3"></button>
           </div>
         </div>
       </div>
@@ -429,10 +476,22 @@
               </div>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  Estruturamos todo o ecossistema de vendas online do seu
-                  restaurante — do tráfego pago à estratégia de conteúdo,
-                  passando pela fidelização e cardápio digital, sempre com foco
-                  em conversão real.
+                  Somos uma assessoria especializada em marketing gastronômico.
+                  Ajudamos restaurantes, pizzarias, hamburguerias e negócios de
+                  alimentação a vender mais por meio de estratégias como tráfego
+                  pago, gestão de iFood, disparo de mensagens, criação de
+                  criativos e estruturação do comercial.
+                </div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question">
+                Posso cancelar quando quiser?
+                <span class="faq-icon"><i class="fas fa-plus"></i></span>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Sim, você pode cancelar sua assinatura a qualquer momento.
                 </div>
               </div>
             </div>
@@ -443,10 +502,9 @@
               </div>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  Os primeiros resultados de engajamento e cliques costumam
-                  aparecer nas primeiras semanas após a ativação das campanhas.
-                  Resultados de faturamento significativos geralmente são
-                  visíveis no primeiro mês.
+                  Depende do estágio atual do seu negócio, estrutura interna e
+                  investimento. Mas, na maioria dos casos, nossos clientes
+                  começam a sentir o impacto positivo nas vendas em 30 a 60 dias.
                 </div>
               </div>
             </div>
@@ -457,10 +515,9 @@
               </div>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  Atendemos estabelecimentos que buscam escala e
-                  profissionalização do marketing digital. Pizzarias,
-                  hamburguerias, sushiarias, restaurantes por quilo, dark
-                  kitchens — se você quer vender mais, a Nexus pode ajudar.
+                  Atendemos desde pequenas operações até grandes redes, desde
+                  que estejam dispostas a seguir um plano estratégico de
+                  crescimento.
                 </div>
               </div>
             </div>
@@ -471,23 +528,10 @@
               </div>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  Cuidamos da parte estratégica e criativa voltada para
-                  conversão em vendas. Produzimos os criativos, definimos a
-                  estratégia e acompanhamos os resultados — tudo com foco em
-                  pedidos, não apenas em curtidas.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <div class="faq-question">
-                Preciso ter experiência com marketing?
-                <span class="faq-icon"><i class="fas fa-plus"></i></span>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Não. A Nexus cuida de tudo. Você só precisa focar no que faz
-                  de melhor: o seu restaurante. Nós cuidamos de toda a estratégia
-                  e execução do marketing digital.
+                  Sim, mas com foco em performance. Não somos uma empresa de
+                  "post bonitinho". Nosso objetivo é transformar conteúdo e
+                  anúncios em vendas reais. Se não gerar resultado, não faz
+                  sentido estar ali.
                 </div>
               </div>
             </div>
@@ -537,17 +581,6 @@
       <a href="#form-section">Diagnóstico Gratuito — 0 Custo</a>
     </div>
 
-    <!-- WHATSAPP FLUTUANTE -->
-    <!-- Substitua XXXXXXXXXXX pelo número completo com DDI+DDD, ex: 5511999999999 -->
-    <a
-      href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Nexus%20Assessoria."
-      class="whatsapp-float"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Falar com a Nexus pelo WhatsApp"
-    >
-      <i class="fab fa-whatsapp" aria-hidden="true"></i>
-    </a>
 
     <!-- TOAST -->
     <div class="toast" id="toast" role="status" aria-live="polite">

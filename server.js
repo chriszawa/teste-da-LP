@@ -433,9 +433,12 @@ function serveStatic(req, res, pathname) {
   }
 
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    const maybeHtml = path.join(PUBLIC_DIR, "index.html");
-    if (pathname === "/" && fs.existsSync(maybeHtml)) filePath = maybeHtml;
-    else {
+    const withHtml = filePath + ".html";
+    if (fs.existsSync(withHtml)) {
+      filePath = withHtml;
+    } else if (pathname === "/" && fs.existsSync(path.join(PUBLIC_DIR, "index.html"))) {
+      filePath = path.join(PUBLIC_DIR, "index.html");
+    } else {
       res.writeHead(404);
       res.end("Not found");
       return;
