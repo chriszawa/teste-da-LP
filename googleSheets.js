@@ -48,7 +48,12 @@ function buildRow(record) {
   ];
 }
 
+function isAppsScriptEnabled() {
+  return isNonEmptyString(process.env.APPS_SCRIPT_URL);
+}
+
 function isSheetsEnabled() {
+  if (isAppsScriptEnabled()) return true;
   return (
     isNonEmptyString(process.env.GOOGLE_SHEETS_SPREADSHEET_ID) &&
     (isNonEmptyString(process.env.GOOGLE_SERVICE_ACCOUNT_JSON_PATH) ||
@@ -56,7 +61,20 @@ function isSheetsEnabled() {
   );
 }
 
+async function appendLeadViaAppsScript(record) {
+  const url = process.env.APPS_SCRIPT_URL.trim();
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record),
+    redirect: "follow",
+  });
+  if (!resp.ok) throw new Error(`apps_script_http_${resp.status}`);
+  return { ok: true };
+}
+
 async function appendLeadToSheets(record) {
+  if (isAppsScriptEnabled()) return appendLeadViaAppsScript(record);
   if (!isSheetsEnabled()) return { ok: false, skipped: true };
 
   // Import dinâmico para não quebrar o site caso a dependência não esteja instalada
