@@ -63,13 +63,17 @@ function isSheetsEnabled() {
 
 async function appendLeadViaAppsScript(record) {
   const url = process.env.APPS_SCRIPT_URL.trim();
-  const resp = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(record),
-    redirect: "follow",
-  });
-  if (!resp.ok) throw new Error(`apps_script_http_${resp.status}`);
+  const body = JSON.stringify(record);
+  const headers = { "Content-Type": "application/json" };
+
+  // Apps Script faz redirect 302 — o fetch converte POST em GET ao seguir,
+  // então precisamos pegar o Location e reenviar o POST manualmente.
+  const r1 = await fetch(url, { method: "POST", headers, body, redirect: "manual" });
+  const location = r1.headers.get("location");
+  if (!location) throw new Error("apps_script_no_location");
+
+  const r2 = await fetch(location, { method: "POST", headers, body });
+  if (!r2.ok) throw new Error(`apps_script_http_${r2.status}`);
   return { ok: true };
 }
 
