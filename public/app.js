@@ -83,13 +83,6 @@ function localValidate(payload) {
   return errors;
 }
 
-function initNavbarScroll() {
-  const navbar = document.getElementById("navbar");
-  if (!navbar) return;
-  const onScroll = () => navbar.classList.toggle("scrolled", window.scrollY > 60);
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-}
 
 function initReveal() {
   const revealItems = () => {
@@ -278,30 +271,117 @@ function initVideoCarousel() {
   if (!carousel) return;
 
   const track = carousel.querySelector(".carousel-track");
-  const slides = carousel.querySelectorAll(".carousel-slide");
-  const dots = carousel.querySelectorAll(".carousel-dot");
-  const prev = carousel.querySelector(".carousel-prev");
-  const next = carousel.querySelector(".carousel-next");
-  const slideWidth = 300;
-  let current = 0;
+  const dotsEl = Array.from(carousel.querySelectorAll(".carousel-dot"));
+  if (!track) return;
 
-  function goTo(index) {
-    carousel.querySelectorAll(".reel-video")[current]?.pause();
-    current = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${current * slideWidth}px)`;
-    dots.forEach((d, i) => d.classList.toggle("active", i === current));
+  const realSlides = Array.from(track.querySelectorAll(".carousel-slide"));
+  const n = realSlides.length;
+  if (n === 0) return;
+
+  // Clona último slide no início e primeiro no fim para loop infinito
+  const cloneHead = realSlides[n - 1].cloneNode(true);
+  const cloneTail = realSlides[0].cloneNode(true);
+  cloneHead.classList.add("clone");
+  cloneTail.classList.add("clone");
+  track.insertBefore(cloneHead, realSlides[0]);
+  track.appendChild(cloneTail);
+
+  // allSlides: [cloneHead, slide0, slide1, ..., cloneTail]  — slides reais: índices 1..n
+  const allSlides = Array.from(track.querySelectorAll(".carousel-slide"));
+  let idx = 1;
+
+  function centerOffset(i) {
+    const s = allSlides[i];
+    if (!s) return 0;
+    return (carousel.offsetWidth / 2) - (s.offsetLeft + s.offsetWidth / 2);
   }
 
-  prev?.addEventListener("click", () => goTo(current - 1));
-  next?.addEventListener("click", () => goTo(current + 1));
-  dots.forEach((d, i) => d.addEventListener("click", () => goTo(i)));
+  function updateDots() {
+    const ri = ((idx - 1) % n + n) % n;
+    dotsEl.forEach((d, i) => d.classList.toggle("active", i === ri));
+  }
 
-  let startX = 0;
-  carousel.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  carousel.addEventListener("touchend", (e) => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+  function setPos(i, animate) {
+    track.style.transition = animate ? "transform 0.45s cubic-bezier(0.4,0,0.2,1)" : "none";
+    if (!animate) void track.offsetHeight;
+    track.style.transform = `translateX(${centerOffset(i)}px)`;
+  }
+
+  function goTo(i, animate = true) {
+    idx = i;
+    setPos(idx, animate);
+    updateDots();
+  }
+
+  requestAnimationFrame(() => goTo(idx, false));
+
+  let transitioning = false;
+
+  // Após transição: libera flag e, se estiver num clone, salta silenciosamente para o slide real
+  track.addEventListener("transitionend", (e) => {
+    if (e.propertyName !== "transform") return;
+    transitioning = false;
+    if (idx === 0)          { idx = n;     setPos(n, false); }
+    else if (idx === n + 1) { idx = 1;     setPos(1, false); }
   });
+
+  function pauseIframe(i) {
+    allSlides[i]?.querySelector("iframe")?.contentWindow?.postMessage(
+      '{"event":"command","func":"pauseVideo","args":""}', "*"
+    );
+  }
+
+  function restoreOverlays() {
+    track.querySelectorAll(".slide-overlay").forEach((o) => o.classList.remove("off"));
+  }
+
+  function navigate(dir) {
+    if (transitioning) return;
+    transitioning = true;
+    pauseIframe(idx);
+    restoreOverlays();
+    goTo(idx + dir);
+  }
+
+  dotsEl.forEach((d, i) => d.addEventListener("click", () => {
+    transitioning = false;
+    pauseIframe(idx);
+    restoreOverlays();
+    goTo(i + 1);
+  }));
+
+  // Toque no overlay → libera interação com o player
+  track.addEventListener("click", (e) => {
+    const overlay = e.target.closest(".slide-overlay");
+    if (!overlay) return;
+    if (overlay.closest(".carousel-slide") === allSlides[idx]) overlay.classList.add("off");
+  });
+
+  // Swipe com detecção de direção: bloqueia scroll vertical quando o gesto é horizontal
+  let startX = 0, startY = 0, isHor = null;
+
+  carousel.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isHor = null;
+  }, { passive: true });
+
+  carousel.addEventListener("touchmove", (e) => {
+    if (isHor === null) {
+      const dx = Math.abs(e.touches[0].clientX - startX);
+      const dy = Math.abs(e.touches[0].clientY - startY);
+      if (dx > 4 || dy > 4) isHor = dx >= dy;
+    }
+    if (isHor) e.preventDefault();
+  }, { passive: false });
+
+  carousel.addEventListener("touchend", (e) => {
+    if (!isHor) return;
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) navigate(diff > 0 ? 1 : -1);
+  });
+
+  window.addEventListener("resize", () => goTo(idx, false));
 }
 
 function initServicesCarousel() {
@@ -313,12 +393,6 @@ function initServicesCarousel() {
 
   const pages = track.querySelectorAll(".services-page");
   let current = 0;
-
-  // Equaliza altura de todos os cards
-  const allCards = track.querySelectorAll(".service-card");
-  let maxH = 0;
-  allCards.forEach((c) => { maxH = Math.max(maxH, c.offsetHeight); });
-  allCards.forEach((c) => { c.style.minHeight = maxH + "px"; });
 
   function goTo(index) {
     current = (index + pages.length) % pages.length;
@@ -360,7 +434,6 @@ function initInvestQuestion() {
   });
 }
 
-initNavbarScroll();
 initReveal();
 initFaqAccordion();
 initSmoothScroll();

@@ -24,19 +24,12 @@
     <script src="/app.js" defer></script>
   </head>
   <body>
-    <!-- NAVBAR -->
-    <nav id="navbar">
-      <a href="#" class="nav-logo" aria-label="Nexus">
-        <img src="/logo-nexus.png" alt="Nexus" height="36" style="display:block;" />
-      </a>
-      <a href="#form-section" class="nav-cta">Diagnóstico Gratuito</a>
-    </nav>
-
     <!-- HERO -->
     <section class="hero">
       <div class="hero-grid"></div>
       <div class="hero-glow"></div>
       <div class="hero-inner">
+        <img src="/logo-nexus.png" alt="Nexus" class="hero-logo reveal" />
         <div class="hero-badge reveal">Marketing para Restaurantes</div>
         <h1 class="reveal reveal-delay-1">
           Seu restaurante pode fechar<br />
@@ -223,7 +216,7 @@
               </div>
 
               <button type="submit" class="btn-primary form-submit" id="submitBtn">
-                Quero meu diagnóstico gratuito
+                Quero mais informações
                 <i class="fas fa-arrow-right"></i>
               </button>
             </form>
@@ -237,31 +230,35 @@
       <div class="container">
         <p class="section-label reveal">Resultados reais</p>
         <h2 class="section-title reveal">O que nossos<br />clientes falam</h2>
-        <div class="testimonials-carousel reveal">
-          <div class="carousel-viewport">
-            <div class="carousel-track">
-              <div class="carousel-slide">
-                <video class="reel-video" controls playsinline preload="metadata">
-                  <source src="/videos/ad-tiagao.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <div class="carousel-slide">
-                <video class="reel-video" controls playsinline preload="metadata">
-                  <source src="/videos/depoimento.mp4" type="video/mp4" />
-                </video>
-              </div>
-            </div>
+      </div>
+      <div class="testimonials-carousel reveal">
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <div class="slide-overlay" aria-hidden="true"></div>
+            <iframe
+              class="reel-video"
+              src="https://www.youtube.com/embed/uiJWiAAibBw?rel=0&playsinline=1&enablejsapi=1"
+              title="Depoimento 1"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
-          <button class="carousel-btn carousel-prev" aria-label="Anterior">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="carousel-btn carousel-next" aria-label="Próximo">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-          <div class="carousel-dots">
-            <button class="carousel-dot active" aria-label="Vídeo 1"></button>
-            <button class="carousel-dot" aria-label="Vídeo 2"></button>
+          <div class="carousel-slide">
+            <div class="slide-overlay" aria-hidden="true"></div>
+            <iframe
+              class="reel-video"
+              src="https://www.youtube.com/embed/mtjS2_idFG0?rel=0&playsinline=1&enablejsapi=1"
+              title="Depoimento 2"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
+        </div>
+        <div class="carousel-dots">
+          <button class="carousel-dot active" aria-label="Vídeo 1"></button>
+          <button class="carousel-dot" aria-label="Vídeo 2"></button>
         </div>
       </div>
     </section>
@@ -343,7 +340,7 @@
               <i class="fas fa-chevron-down pillar-arrow"></i>
             </div>
             <div class="pillar-body">
-              <div class="pillar-body-inner">Campanhas de oferta por tempo limitado, remarketing para quem já visitou seu perfil e gatilhos de urgência que levam o cliente a pedir agora — não amanhã.</div>
+              <div class="pillar-body-inner">Campanhas de oferta por tempo limitado, remarketing para quem já visitou seu perfil e gatilhos de urgência que levam o cliente a pedir agora, não amanhã.</div>
             </div>
           </div>
           <div class="pillar-row reveal reveal-delay-2">
@@ -355,7 +352,7 @@
               <i class="fas fa-chevron-down pillar-arrow"></i>
             </div>
             <div class="pillar-body">
-              <div class="pillar-body-inner">Disparos de WhatsApp segmentados, comunicação recorrente e ofertas exclusivas para quem já é cliente. Quem comprou uma vez volta a comprar — com a estratégia certa.</div>
+              <div class="pillar-body-inner">Disparos de WhatsApp segmentados, comunicação recorrente e ofertas exclusivas para quem já é cliente. Quem comprou uma vez volta a comprar com a estratégia certa.</div>
             </div>
           </div>
           <div class="pillar-row reveal">
@@ -367,7 +364,7 @@
               <i class="fas fa-chevron-down pillar-arrow"></i>
             </div>
             <div class="pillar-body">
-              <div class="pillar-body-inner">Tráfego pago no Meta, Google e iFood direcionado para o público certo — pessoas próximas ao seu restaurante que têm perfil de compra. Escalamos o volume de novos pedidos de forma controlada.</div>
+              <div class="pillar-body-inner">Tráfego pago no Meta, Google e iFood direcionado para o público certo, pessoas próximas ao seu restaurante que têm perfil de compra. Escalamos o volume de novos pedidos de forma controlada.</div>
             </div>
           </div>
           <div class="pillar-row reveal reveal-delay-1">
@@ -391,55 +388,93 @@
       <div class="container">
         <p class="section-label reveal">O que fazemos</p>
         <h2 class="section-title reveal">Estruturamos o marketing<br />do seu restaurante</h2>
-        <div class="services-carousel">
+      </div>
+      <div class="services-carousel">
           <div class="services-viewport">
             <div class="services-track">
               <div class="services-page">
-                <div class="service-card">
-                  <div class="service-number">Bloco 01</div>
-                  <div class="service-icon"><i class="fas fa-video"></i></div>
-                  <h3>Criativos e Vídeos</h3>
-                  <p>Produção estratégica de conteúdo que gera desejo, dá fome e leva o cliente direto ao pedido.</p>
+                <div class="service-card service-card--horizontal service-card--img-sm service-card--img-keep-right">
+                  <div class="service-card-body">
+                    <div class="service-card-header">
+                      <div class="service-icon"><i class="fas fa-video"></i></div>
+                      <span class="service-number">Bloco 01</span>
+                    </div>
+                    <h3>Criativos e Vídeos</h3>
+                    <p>Produção estratégica de conteúdo que gera desejo, dá fome e leva o cliente direto ao pedido em todas as plataformas.</p>
+                  </div>
+                  <img src="/CRIATIVOS_VIDEOS.png" alt="Criativos e Vídeos" class="service-card-img" />
                 </div>
+              </div>
+              <div class="services-page">
                 <div class="service-card">
-                  <div class="service-number">Bloco 02</div>
-                  <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                  <div class="service-card-header">
+                    <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                    <span class="service-number">Bloco 02</span>
+                  </div>
                   <h3>Relatórios e Acompanhamento</h3>
-                  <p>Análise contínua de dados e performance para otimização constante das campanhas e resultados.</p>
+                  <p>Análise contínua de dados e performance para otimização constante das campanhas e resultados do seu restaurante.</p>
                 </div>
-                <div class="service-card">
-                  <div class="service-number">Bloco 03</div>
-                  <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
-                  <h3>Cardápio Digital</h3>
-                  <p>Otimização completa da jornada de compra do seu cliente para maximizar o ticket médio.</p>
+              </div>
+              <div class="services-page">
+                <div class="service-card service-card--horizontal">
+                  <div class="service-card-body">
+                    <div class="service-card-header">
+                      <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                      <span class="service-number">Bloco 03</span>
+                    </div>
+                    <h3>Cardápio Digital</h3>
+                    <p>Otimização completa da jornada de compra para aumentar o ticket médio e facilitar a decisão do cliente na hora do pedido.</p>
+                  </div>
+                  <img src="/CARDAPIODIGITAL.png" alt="Cardápio Digital" class="service-card-img" />
+                </div>
+              </div>
+              <div class="services-page">
+                <div class="service-card service-card--horizontal service-card--img-sm">
+                  <div class="service-card-body">
+                    <div class="service-card-header">
+                      <div class="service-icon"><i class="fas fa-paper-plane"></i></div>
+                      <span class="service-number">Bloco 04</span>
+                    </div>
+                    <h3>Disparo de Mensagens Inteligente</h3>
+                    <p>Campanhas automáticas de vendas direto no WhatsApp do seu cliente: promoções, combos e novidades no momento certo.</p>
+                  </div>
+                  <img src="/DISPARODEMENSANGENSINTELIGENTE.png" alt="Disparo de Mensagens Inteligente" class="service-card-img" />
+                </div>
+              </div>
+              <div class="services-page">
+                <div class="service-card service-card--horizontal service-card--img-up">
+                  <div class="service-card-body">
+                    <div class="service-card-header">
+                      <div class="service-icon"><i class="fas fa-users-cog"></i></div>
+                      <span class="service-number">Bloco 05</span>
+                    </div>
+                    <h3>Gestão e Atendimento</h3>
+                    <p>Um time completo ao seu lado, sem dor de cabeça com contratações, gestão de pessoas ou riscos trabalhistas.</p>
+                  </div>
+                  <img src="/ATENDIMENTO.png" alt="Gestão e Atendimento" class="service-card-img" />
+                </div>
+              </div>
+              <div class="services-page">
+                <div class="service-card service-card--horizontal service-card--img-right service-card--img-up">
+                  <div class="service-card-body">
+                    <div class="service-card-header">
+                      <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+                      <span class="service-number">Bloco 06</span>
+                    </div>
+                    <h3>Mídia Paga</h3>
+                    <p>Gestão dos seus anúncios no Instagram, Facebook e iFood, impactando o público certo, na hora certa, com o menor custo possível.</p>
+                  </div>
+                  <img src="/ANUNCIOSONLINE.png" alt="Mídia Paga" class="service-card-img" />
                 </div>
               </div>
               <div class="services-page">
                 <div class="service-card">
-                  <div class="service-number">Bloco 04</div>
-                  <div class="service-icon"><i class="fas fa-paper-plane"></i></div>
-                  <h3>Disparo de Mensagens Inteligente</h3>
-                  <p>Campanhas automáticas de vendas: promoções, combos e novidades direto no WhatsApp do seu cliente. Reativação de clientes antigos: trazemos de volta quem já comprou e parou de pedir.</p>
-                </div>
-                <div class="service-card">
-                  <div class="service-number">Bloco 05</div>
-                  <div class="service-icon"><i class="fas fa-users-cog"></i></div>
-                  <h3>Gestão e Atendimento</h3>
-                  <p>Estratégias de growth aplicadas à realidade do seu restaurante com visão de longo prazo. Contamos com um time formado e acompanhado de perto por gestores de alta performance.</p>
-                </div>
-                <div class="service-card">
-                  <div class="service-number">Bloco 06</div>
-                  <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
-                  <h3>Mídia Paga</h3>
-                  <p>Gestão dos seus anúncios no Instagram, Facebook e iFood. Impactamos seu público ideal com anúncios feitos para quem tem fome de comprar. Transformamos desconhecidos em clientes fiéis com tráfego direcionado e estratégia afiada.</p>
-                </div>
-              </div>
-              <div class="services-page">
-                <div class="service-card">
-                  <div class="service-number">Bloco 07</div>
-                  <div class="service-icon"><i class="fas fa-handshake"></i></div>
+                  <div class="service-card-header">
+                    <div class="service-icon"><i class="fas fa-handshake"></i></div>
+                    <span class="service-number">Bloco 07</span>
+                  </div>
                   <h3>Soluções Comerciais para Restaurantes</h3>
-                  <p>Scripts, processos e ferramentas prontos para aumentar seus pedidos e reservas. Treinamos seus atendentes para venderem mais no balcão, salão ou WhatsApp.</p>
+                  <p>Scripts, processos e ferramentas prontos para aumentar seus pedidos e reservas no balcão, no salão ou pelo WhatsApp.</p>
                 </div>
               </div>
             </div>
@@ -450,6 +485,38 @@
             <button class="svc-dot active" aria-label="Página 1"></button>
             <button class="svc-dot" aria-label="Página 2"></button>
             <button class="svc-dot" aria-label="Página 3"></button>
+            <button class="svc-dot" aria-label="Página 4"></button>
+            <button class="svc-dot" aria-label="Página 5"></button>
+            <button class="svc-dot" aria-label="Página 6"></button>
+            <button class="svc-dot" aria-label="Página 7"></button>
+          </div>
+        </div>
+    </section>
+
+    <!-- TIME EXCLUSIVO -->
+
+    <section class="team-section">
+      <div class="container">
+        <div class="team-inner reveal">
+          <div class="team-content">
+            <p class="section-label">Time Exclusivo</p>
+            <h2 class="team-title">A Assessoria Nexus estrutura o marketing do seu restaurante com base na sua necessidade</h2>
+            <p class="team-desc">Tenha um time de especialistas ao seu lado ou terceirize totalmente seu marketing e setor comercial com a Nexus. Sem dor de cabeça com contratações, gestão de equipe, riscos trabalhistas ou burocracias: você foca no seu restaurante, e a gente foca em fazer ele crescer.</p>
+            <a href="#form-section" class="btn-primary">
+              Quero mais informações
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="team-visual">
+            <div class="team-glow"></div>
+            <div class="team-icon-grid">
+              <div class="team-icon-item"><i class="fas fa-bullhorn"></i><span>Mídia Paga</span></div>
+              <div class="team-icon-item"><i class="fas fa-video"></i><span>Criativos</span></div>
+              <div class="team-icon-item"><i class="fas fa-chart-line"></i><span>Resultados</span></div>
+              <div class="team-icon-item"><i class="fas fa-paper-plane"></i><span>Mensagens</span></div>
+              <div class="team-icon-item"><i class="fas fa-handshake"></i><span>Comercial</span></div>
+              <div class="team-icon-item"><i class="fas fa-users-cog"></i><span>Gestão</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -549,7 +616,7 @@
           contato em até 5 minutos.
         </p>
         <a href="#form-section" class="btn-primary">
-          Quero meu diagnóstico gratuito
+          Quero mais informações
           <i class="fas fa-arrow-right"></i>
         </a>
       </div>
@@ -562,7 +629,7 @@
           <img src="/logo-nexus.png" alt="Nexus" height="30" style="display:block;" />
         </div>
         <div class="footer-links">
-          <a href="#form-section">Diagnóstico Gratuito</a>
+          <a href="#form-section">Quero mais informações</a>
           <!-- Substitua pelo link real do Instagram: https://instagram.com/SEU_PERFIL -->
           <a href="https://instagram.com/nexusassessoria" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <i class="fab fa-instagram" style="margin-right: 4px"></i>Instagram
@@ -576,10 +643,6 @@
       </div>
     </footer>
 
-    <!-- STICKY CTA MOBILE -->
-    <div class="sticky-cta">
-      <a href="#form-section">Diagnóstico Gratuito — 0 Custo</a>
-    </div>
 
 
     <!-- TOAST -->

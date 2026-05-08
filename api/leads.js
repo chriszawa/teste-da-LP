@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const { appendLeadToSheets, isSheetsEnabled } = require("../googleSheets");
+const { sendWhatsApp, isWhatsAppEnabled } = require("../whatsapp");
 
 function sendJson(res, statusCode, payload) {
   const body = JSON.stringify(payload);
@@ -60,6 +61,11 @@ module.exports = async function handler(req, res) {
   }
   if (!payload || typeof payload !== "object") payload = {};
 
+  // Honeypot: bots fill this field, humans don't
+  if (typeof payload.hp_website === "string" && payload.hp_website.trim().length > 0) {
+    return sendJson(res, 200, { ok: true, id: crypto.randomUUID() });
+  }
+
   const { ok, errors, lead } = validateLead(payload);
   if (!ok) return sendJson(res, 422, { ok: false, error: "validation_error", fields: errors });
 
@@ -85,9 +91,14 @@ module.exports = async function handler(req, res) {
 
   try {
     await appendLeadToSheets(record);
-    return sendJson(res, 200, { ok: true, id: record.id });
   } catch {
     return sendJson(res, 502, { ok: false, error: "sheets_append_failed" });
   }
+
+  if (isWhatsAppEnabled()) {
+    sendWhatsApp(record).catch(() => {});
+  }
+
+  return sendJson(res, 200, { ok: true, id: record.id });
 };
 
