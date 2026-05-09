@@ -274,59 +274,41 @@ function initVideoCarousel() {
   const dotsEl = Array.from(carousel.querySelectorAll(".carousel-dot"));
   if (!track) return;
 
-  const realSlides = Array.from(track.querySelectorAll(".carousel-slide"));
-  const n = realSlides.length;
+  const slides = Array.from(track.querySelectorAll(".carousel-slide"));
+  const n = slides.length;
   if (n === 0) return;
 
-  // Clona último slide no início e primeiro no fim para loop infinito
-  const cloneHead = realSlides[n - 1].cloneNode(true);
-  const cloneTail = realSlides[0].cloneNode(true);
-  cloneHead.classList.add("clone");
-  cloneTail.classList.add("clone");
-  track.insertBefore(cloneHead, realSlides[0]);
-  track.appendChild(cloneTail);
-
-  // allSlides: [cloneHead, slide0, slide1, ..., cloneTail]  — slides reais: índices 1..n
-  const allSlides = Array.from(track.querySelectorAll(".carousel-slide"));
-  let idx = 1;
+  let idx = 0;
 
   function centerOffset(i) {
-    const s = allSlides[i];
+    const s = slides[i];
     if (!s) return 0;
     return (carousel.offsetWidth / 2) - (s.offsetLeft + s.offsetWidth / 2);
   }
 
   function updateDots() {
-    const ri = ((idx - 1) % n + n) % n;
-    dotsEl.forEach((d, i) => d.classList.toggle("active", i === ri));
-  }
-
-  function setPos(i, animate) {
-    track.style.transition = animate ? "transform 0.45s cubic-bezier(0.4,0,0.2,1)" : "none";
-    if (!animate) void track.offsetHeight;
-    track.style.transform = `translateX(${centerOffset(i)}px)`;
+    dotsEl.forEach((d, i) => d.classList.toggle("active", i === idx));
   }
 
   function goTo(i, animate = true) {
-    idx = i;
-    setPos(idx, animate);
+    idx = ((i % n) + n) % n;
+    track.style.transition = animate ? "transform 0.45s cubic-bezier(0.4,0,0.2,1)" : "none";
+    if (!animate) void track.offsetHeight;
+    track.style.transform = `translateX(${centerOffset(idx)}px)`;
     updateDots();
   }
 
-  requestAnimationFrame(() => goTo(idx, false));
+  requestAnimationFrame(() => goTo(0, false));
 
   let transitioning = false;
 
-  // Após transição: libera flag e, se estiver num clone, salta silenciosamente para o slide real
   track.addEventListener("transitionend", (e) => {
     if (e.propertyName !== "transform") return;
     transitioning = false;
-    if (idx === 0)          { idx = n;     setPos(n, false); }
-    else if (idx === n + 1) { idx = 1;     setPos(1, false); }
   });
 
   function pauseIframe(i) {
-    allSlides[i]?.querySelector("iframe")?.contentWindow?.postMessage(
+    slides[i]?.querySelector("iframe")?.contentWindow?.postMessage(
       '{"event":"command","func":"pauseVideo","args":""}', "*"
     );
   }
@@ -347,17 +329,15 @@ function initVideoCarousel() {
     transitioning = false;
     pauseIframe(idx);
     restoreOverlays();
-    goTo(i + 1);
+    goTo(i);
   }));
 
-  // Toque no overlay → libera interação com o player
   track.addEventListener("click", (e) => {
     const overlay = e.target.closest(".slide-overlay");
     if (!overlay) return;
-    if (overlay.closest(".carousel-slide") === allSlides[idx]) overlay.classList.add("off");
+    if (overlay.closest(".carousel-slide") === slides[idx]) overlay.classList.add("off");
   });
 
-  // Swipe com detecção de direção: bloqueia scroll vertical quando o gesto é horizontal
   let startX = 0, startY = 0, isHor = null;
 
   carousel.addEventListener("touchstart", (e) => {

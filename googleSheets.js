@@ -66,13 +66,13 @@ async function appendLeadViaAppsScript(record) {
   const body = JSON.stringify(record);
   const headers = { "Content-Type": "application/json" };
 
-  // Apps Script faz redirect 302 — o fetch converte POST em GET ao seguir,
-  // então precisamos pegar o Location e reenviar o POST manualmente.
+  // Apps Script executa no POST inicial e redireciona (302) para uma URL de output
+  // (script.googleusercontent.com) que só aceita GET — por isso fazemos GET no redirect.
   const r1 = await fetch(url, { method: "POST", headers, body, redirect: "manual" });
   const location = r1.headers.get("location");
   if (!location) throw new Error("apps_script_no_location");
 
-  const r2 = await fetch(location, { method: "POST", headers, body });
+  const r2 = await fetch(location, { method: "GET", redirect: "follow" });
   if (!r2.ok) throw new Error(`apps_script_http_${r2.status}`);
   return { ok: true };
 }

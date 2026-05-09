@@ -898,7 +898,7 @@ section {
   top: 0;
   bottom: 0;
   width: 38%;
-  height: auto;
+  height: 100%;
   border-radius: 0;
   display: block;
   object-fit: cover;
@@ -910,7 +910,7 @@ section {
 }
 .service-card.service-card--img-sm .service-card-img {
   width: 32%;
-  object-position: center 82%;
+  object-position: center 92%;
 }
 .service-card.service-card--img-sm .service-card-body {
   width: 68%;
@@ -919,12 +919,11 @@ section {
   object-position: right center;
 }
 .service-card.service-card--img-up .service-card-img {
-  object-position: right -40%;
+  object-position: right center;
 }
 .service-card.service-card--img-right.service-card--img-up .service-card-img {
-  object-position: right top;
-}
-.svc-btn {
+  object-position: right center;
+}.svc-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1557,7 +1556,7 @@ footer {
     top: 0;
     bottom: 0;
     width: 48%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
     object-position: right center;
   }
