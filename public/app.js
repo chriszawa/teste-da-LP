@@ -283,7 +283,10 @@ function initVideoCarousel() {
   function centerOffset(i) {
     const s = slides[i];
     if (!s) return 0;
-    return (carousel.offsetWidth / 2) - (s.offsetLeft + s.offsetWidth / 2);
+    const slideW = s.offsetWidth;
+    const gap = parseFloat(getComputedStyle(track).gap) || 20;
+    const naturalPos = i * (slideW + gap);
+    return (carousel.offsetWidth / 2) - (naturalPos + slideW / 2);
   }
 
   function updateDots() {
